@@ -8,8 +8,8 @@ export const createServiceRequest = async (customerId, salesRepId, address, star
 		startDate: startDate,
 		address: address,
 		onsiteWorkers: [],
-		status: "in progress",
-		tasks: ["service request"],
+		status: "not started",
+		tasks: ["initial inspection"],
 		cost: 1
 	});
 }
