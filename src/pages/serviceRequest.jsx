@@ -1,8 +1,15 @@
 import React from 'react';
+import { createServiceRequest } from 'utils/data/ServiceRequest';
 
 export default function serviceRequest() {
-    const submitRequest = () => {
-        //Call firebase functions here
+    const submitRequest = (e) => {
+        e.preventDefault();
+		createServiceRequest(
+			e.target.elements.customerId.value, 	// customerId
+			123,									// salesRepId; default for now
+			e.target.elements.address.value, 		// address
+			e.target.elements.startDate.value		// startDate
+		);
     }
 
     return (
@@ -20,6 +27,7 @@ export default function serviceRequest() {
                 <input type="date" name="startDate" id="startDate"/>
                 <br></br>
                 <input type="text" name="description" id="description" placeholder="Enter a description"/>
+				<button type='submit'>Submit</button>
             </form>
         </div>
     )
