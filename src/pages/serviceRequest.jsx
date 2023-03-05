@@ -5,15 +5,20 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 export default function serviceRequest() {
-    const submitRequest = (e) => {
+    const submitRequest = async (e) => {
         e.preventDefault();
-		createServiceRequest(
-			e.target.elements.customerId.value, 	// customerId
-			auth.currentUser.uid,									// salesRepId; default for now
-			e.target.elements.address.value, 		// address
-			e.target.elements.startDate.value,		// startDate
-			e.target.elements.description.value
-		);
+		try { 
+			await createServiceRequest(
+				e.target.elements.customerId.value,
+				auth.currentUser.uid,
+				e.target.elements.address.value,
+				e.target.elements.startDate.value,
+				e.target.elements.description.value
+			);
+		} catch (error) { 
+			console.log(error.message);
+		}
+
     }
 
     return (
