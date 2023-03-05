@@ -6,9 +6,11 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"seed": "node ./src/firebase/FirestoreSeed.js"
 	},
 	"dependencies": {
+		"@firebase/firestore": "^3.8.3",
 		"firebase": "^9.17.1",
 		"next": "13.2.1",
 		"react": "18.2.0",

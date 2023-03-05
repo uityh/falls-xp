@@ -2,7 +2,8 @@
 /node_modules
 /.pnp
 .pnp.js
-
+/seeding/node_modules
+**/.vscode/
 # testing
 /coverage
 
