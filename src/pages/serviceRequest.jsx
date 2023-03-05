@@ -1,10 +1,24 @@
 import React from 'react';
+import { createServiceRequest } from 'utils/data/ServiceRequest';
+import { auth } from 'utils/firebase';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 export default function serviceRequest() {
-    const submitRequest = () => {
-        //Call firebase functions here
+    const submitRequest = async (e) => {
+        e.preventDefault();
+		try { 
+			await createServiceRequest(
+				e.target.elements.customerId.value,
+				auth.currentUser.uid,
+				e.target.elements.address.value,
+				e.target.elements.startDate.value,
+				e.target.elements.description.value
+			);
+		} catch (error) { 
+			console.log(error.message);
+		}
+
     }
 
     return (
