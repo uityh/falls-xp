@@ -1,14 +1,16 @@
 import React from 'react';
 import { createServiceRequest } from 'utils/data/ServiceRequest';
+import { auth } from 'utils/firebase';
 
 export default function serviceRequest() {
     const submitRequest = (e) => {
         e.preventDefault();
 		createServiceRequest(
 			e.target.elements.customerId.value, 	// customerId
-			123,									// salesRepId; default for now
+			auth.currentUser.uid,									// salesRepId; default for now
 			e.target.elements.address.value, 		// address
-			e.target.elements.startDate.value		// startDate
+			e.target.elements.startDate.value,		// startDate
+			e.target.elements.description.value
 		);
     }
 

@@ -1,7 +1,7 @@
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from 'utils/firebase';
 
-export const createServiceRequest = async (customerId, salesRepId, address, startDate) => {
+export const createServiceRequest = async (customerId, salesRepId, address, startDate, customerNotes) => {
 	return await addDoc(collection(db, 'projects'), { 
 		customerId: customerId,
 		salesRepId: salesRepId,
@@ -10,6 +10,7 @@ export const createServiceRequest = async (customerId, salesRepId, address, star
 		onsiteWorkers: [],
 		status: "not started",
 		tasks: ["initial inspection"],
-		cost: 1
+		cost: 1,
+		customerNotes: customerNotes
 	});
 }
