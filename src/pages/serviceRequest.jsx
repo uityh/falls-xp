@@ -1,6 +1,8 @@
 import React from 'react';
 import { createServiceRequest } from 'utils/data/ServiceRequest';
 import { auth } from 'utils/firebase';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 export default function serviceRequest() {
     const submitRequest = (e) => {
@@ -17,19 +19,17 @@ export default function serviceRequest() {
     return (
         <div className="submit-service-request">
             <link rel="stylesheet" href="/src/styles/globals.css"/>
-            <h1>Service Request</h1>
+            <h1 className="page-header">Service Request</h1>
             <form onSubmit={submitRequest}>
-                <label for="customerId" >Customer ID</label>
-                <input type="text" name="customerId" id="customerId" placeholder="Customer ID"/>
-                <br></br>
-                <label for="address">Address</label>
-                <input type="text" name="address" id="address" placeholder="Address"/>
-                <br></br>
-                <label for="startDate">Start Date</label>
-                <input type="date" name="startDate" id="startDate"/>
-                <br></br>
-                <input type="text" name="description" id="description" placeholder="Enter a description"/>
-				<button type='submit'>Submit</button>
+                <TextField id="customerId" label="Customer ID" variant="filled" required size="small" margin="dense" helperText="Enter the customer's ID"/>
+                <br/>
+                <TextField id="address" label="Address" variant="filled" required size="small" margin="dense" helperText="Enter the customer's address"/>
+                <br/>
+                <TextField id="startDate" label="Start Date" variant="filled" type="date" size="small" margin="dense" required InputLabelProps={{shrink: true}}/>
+                <br/>
+                <TextField id="description" label="Description" variant="filled" margin="dense" multiline placeholder="Enter a Description"/>
+                <br/>
+                <Button variant="contained" type="submit" sx={{color: 'black', backgroundColor: "lightgrey", borderColor: 'black', borderRadius: '20px'}}>Submit Request</Button>
             </form>
         </div>
     )
