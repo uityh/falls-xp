@@ -12,6 +12,9 @@ export const createServiceRequest = async (customerId, salesRepId, address, star
 
 	startDate.setHours(0, 0, 0);
 
+	
+
+
 	return await addDoc(collection(db, 'projects'), { 
 		customerId: customerId,
 		salesRepId: salesRepId,
