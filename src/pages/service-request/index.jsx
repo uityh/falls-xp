@@ -4,7 +4,7 @@ import { auth } from 'utils/firebase';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-export default function serviceRequest() {
+export default function ServiceRequest() {
 	const submitRequest = async (e) => {
 		e.preventDefault();
 		try {
