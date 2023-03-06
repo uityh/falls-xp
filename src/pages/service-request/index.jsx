@@ -15,6 +15,7 @@ export default function ServiceRequest() {
 				e.target.elements.startDate.value,
 				e.target.elements.description.value
 			);
+			document.getElementById('service-request-form').reset();
 		} catch (error) {
 			console.log(error.message);
 		}
@@ -23,7 +24,7 @@ export default function ServiceRequest() {
 	return (
 		<div className="submit-service-request">
 			<h1 className="page-header">Service Request</h1>
-			<form onSubmit={submitRequest}>
+			<form id="service-request-form" onSubmit={submitRequest}>
 				<TextField
 					id="customerId"
 					label="Customer ID"
@@ -67,6 +68,7 @@ export default function ServiceRequest() {
 				<Button
 					variant="contained"
 					type="submit"
+					margin="dense"
 					sx={{
 						color: 'black',
 						backgroundColor: 'lightgrey',
