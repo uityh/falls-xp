@@ -15,6 +15,8 @@ const checkDateString = (dateStr, varName, minDate=new Date(), maxDate) => {
 	const date = new Date(dateStr);
 	if(date.toString() === 'Invalid Date') throw new Error(`${varName} must be a valid date`);
 	
+	minDate.setHours(24, 59, 59);
+
 	if(minDate && date < minDate) throw new Error(`${varName} must be after ${minDate}`);
 	if(maxDate && date > maxDate) throw new Error(`${varName} must be before ${maxDate}`);
 

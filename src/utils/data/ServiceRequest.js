@@ -10,6 +10,8 @@ export const createServiceRequest = async (customerId, salesRepId, address, star
 	startDate = checkDateString(startDate, 'startDate');
 	customerNotes = checkString(customerNotes, 'customerNotes');
 
+	startDate.setHours(0, 0, 0);
+
 	return await addDoc(collection(db, 'projects'), { 
 		customerId: customerId,
 		salesRepId: salesRepId,
@@ -18,7 +20,7 @@ export const createServiceRequest = async (customerId, salesRepId, address, star
 		onsiteWorkers: [],
 		status: "not started",
 		tasks: ["initial inspection"],
-		cost: 1,
+		cost: 0,
 		customerNotes: customerNotes
 	});
 }
