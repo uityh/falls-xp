@@ -1,0 +1,10 @@
+*{
+    margin: 0;
+}
+.submit-service-request{
+    text-align: center
+}
+.page-header{
+    background-color: lightgrey;
+    padding: 24px;
+}
