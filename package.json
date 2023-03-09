@@ -3,33 +3,50 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
-		"build": "next build",
-		"start": "next start",
-		"lint": "next lint",
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
 		"seed": "node ./src/firebase/FirestoreSeed.js"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
-		"@mui/material": "^5.11.11",
+		"@testing-library/jest-dom": "^5.16.5",
+		"@testing-library/react": "^13.4.0",
+		"@testing-library/user-event": "^13.5.0",
 		"@firebase/firestore": "^3.8.3",
+		"@mui/material": "^5.11.11",
 		"firebase": "^9.17.1",
-		"next": "^13.2.1",
+		"formik": "^2.2.9",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
-		"react-router-dom": "^6.8.2"
+		"react-router-dom": "^6.8.2",
+		"react-scripts": "5.0.1",
+		"yup": "^1.0.2"
 	},
 	"devDependencies": {
 		"eslint": "8.34.0",
 		"eslint-config-airbnb": "^19.0.4",
 		"eslint-config-airbnb-base": "^15.0.0",
-		"eslint-config-next": "13.2.1",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-jsx-a11y": "^6.6.1",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-react": "^7.31.10",
-		"eslint-plugin-react-hooks": "^4.6.0"
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"prettier": "^2.7.1"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
 	}
 }
