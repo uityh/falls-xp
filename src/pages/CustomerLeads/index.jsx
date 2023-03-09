@@ -1,13 +1,13 @@
 import React from 'react';
 import CustomerData from './CustomerData';
 
-function App() {
+function CustomerLeads() {
 	return (
-		<div className="App">
+		<div>
 			<h1>Customer Leads</h1>
 			<CustomerData />
 		</div>
 	);
 }
 
-export default App;
+export default CustomerLeads;
