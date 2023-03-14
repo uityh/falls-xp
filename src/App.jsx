@@ -6,12 +6,15 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import 'styles/globals.css';
+import { AuthContextProvider } from 'contexts/Auth';
 
 function App() {
 	return (
-		<Layout>
-			<Routes />
-		</Layout>
+		<AuthContextProvider>
+			<Layout>
+				<Routes />
+			</Layout>
+		</AuthContextProvider>
 	);
 }
 

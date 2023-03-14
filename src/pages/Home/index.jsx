@@ -1,5 +1,16 @@
+import { Box, Typography } from '@mui/material';
+import { useAuthContext } from 'contexts/Auth';
 import React from 'react';
 
 export default function Home() {
-	return <p>Home Page</p>;
+	const { user } = useAuthContext();
+	return (
+		<Box>
+			<Typography>Home Page</Typography>
+			<Typography>
+				Current User: {user?.firstName ?? 'Not Logged In'}
+			</Typography>
+			{user && <Typography>Role: {user?.role}</Typography>}
+		</Box>
+	);
 }
