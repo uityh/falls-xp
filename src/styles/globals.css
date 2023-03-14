@@ -1,10 +1,35 @@
-*{
-    margin: 0;
+* {
+	margin: 0;
 }
-.submit-service-request{
-    text-align: center
+.submit-service-request {
+	text-align: center;
 }
-.page-header{
-    background-color: lightgrey;
-    padding: 24px;
+.page-header {
+	background-color: lightgrey;
+	padding: 24px;
+}
+
+.notFound__container {
+	width: 100%;
+	min-height: calc(100vh - 200px);
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+.notFound__content__header {
+	font-size: 3rem;
+	margin: 0;
+}
+
+/* have to use important to overwrite mui styles */
+
+.notFound__content_text {
+	margin: 1rem 0 !important;
+}
+
+.notFound__content__btn {
+	border: 1px solid #1976d2 !important;
 }
