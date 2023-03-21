@@ -4,6 +4,7 @@ import NotFound from 'pages/404';
 import Home from 'pages/Home';
 import CustomerLeads from 'pages/CustomerLeads';
 import SingleUser from 'pages/Users/SingleUser';
+import ServiceRequest from 'pages/ServiceRequest';
 import Users from 'pages/Users';
 import SignIn from 'pages/SignIn';
 import SignUp from 'pages/SignUp';
@@ -19,6 +20,7 @@ function Routes() {
 				<Route index element={<Users />} />
 				<Route path=":id" element={<SingleUser />} />
 			</Route>
+			<Route path="/service-request" element={<ServiceRequest />} />
 			<Route path="*" element={<NotFound />} />
 		</RRDRoutes>
 	);
