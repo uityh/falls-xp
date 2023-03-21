@@ -1,3 +1,7 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-await */
+/* eslint-disable import/prefer-default-export */
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from 'utils/firebase';
 import { checkString, checkDateString } from 'utils/helpers/validation';

@@ -1,8 +1,8 @@
 import React from 'react';
-import { createServiceRequest } from 'utils/data/serviceRequest';
 import { auth } from 'utils/firebase';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { createServiceRequest } from '../../utils/data/ServiceRequest';
 
 export default function ServiceRequest() {
 	const submitRequest = async (e) => {
