@@ -46,7 +46,7 @@ function Navbar() {
 						>
 							Sign In
 						</NavLink>
-						<NavLink
+						{/* <NavLink
 							to="/sign-up"
 							style={({ isActive }) => {
 								return {
@@ -56,7 +56,7 @@ function Navbar() {
 							}}
 						>
 							Sign Up
-						</NavLink>
+						</NavLink> */}
 						<NavLink
 							to="/users"
 							style={({ isActive }) => {

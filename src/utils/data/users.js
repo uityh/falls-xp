@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
 	collection,
 	getDocs,
@@ -35,24 +36,16 @@ export const getUserById = async (id) => {
 };
 
 export const getUserByEmail = async (email) => {
-	//!
-	console.log('Before getDocs call');
 	const userDoc = await getDocs(
 		query(collection(db, 'users'), where('email', '==', email))
 	);
 	const result = [];
-	//!
-	console.log('Before docs forEach loop');
 	userDoc.forEach((uDoc) => {
 		result.push({
 			id: uDoc.id,
 			...uDoc.data(),
 		});
 	});
-	//!
-	console.log('after forEach loop');
-	console.log(result);
-	console.log(userDoc);
 	if (result.length === 0) throw new Error('No user with provided email found');
 	return result[0];
 };
@@ -67,8 +60,19 @@ const checkEmailExists = async (email) => {
 	return false;
 };
 
+export const authenticateUser = async (email, password) => {
+	try {
+		const res = await signInWithEmailAndPassword(auth, email, password);
+		const { user } = res;
+		const userObj = await getUserByEmail(user.email);
+		return userObj;
+	} catch (e) {
+		throw new Error('Email or password is incorrect');
+	}
+};
+
 export const createUser = async (user) => {
-	if (checkEmailExists(user.email))
+	if (await checkEmailExists(user.email))
 		throw new Error('An account with this email already exists');
 	const userDoc = await addDoc(collection(db, 'users'), user);
 	await createUserWithEmailAndPassword(auth, user.email, userDoc.id);
@@ -76,21 +80,14 @@ export const createUser = async (user) => {
 	return getUserById(userDoc.id);
 };
 
-export const authenticateUser = async (email, password) => {
-	try {
-		//!
-		console.log('Before calling signInWithEmailAndPassword');
-		const res = await signInWithEmailAndPassword(auth, email, password);
-		//!
-		console.log('Successfully calles signIn function');
-		const { user } = res;
-		//!
-		console.log('Before getUserByEmail');
-		const userObj = await getUserByEmail(user.email);
-		//!
-		console.log('After getUserByemail');
-		return userObj;
-	} catch (e) {
-		throw new Error('Email or password is incorrect');
-	}
-};
+// export const createUserPassword = async (user) => {
+// 	if (checkEmailExists(user.email))
+// 		throw new Error('An account with this email already exists');
+// 	const { password } = user;
+// 	const uploadData = user;
+// 	delete uploadData.password;
+// 	const userDoc = await addDoc(collection(db, 'users'), uploadData);
+// 	await createUserWithEmailAndPassword(auth, user.email, password);
+// 	await authenticateUser(user.email, password);
+// 	return getUserById(userDoc.id);
+// };

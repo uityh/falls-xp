@@ -7,7 +7,7 @@ import ProjectViews from 'pages/ProjectViews';
 import ServiceRequest from 'pages/ServiceRequest';
 import SingleUser from 'pages/Users/SingleUser';
 import SignIn from 'pages/SignIn';
-import SignUp from 'pages/SignUp';
+// import SignUp from 'pages/SignUp';
 import Users from 'pages/Users';
 
 function Routes() {
@@ -16,7 +16,9 @@ function Routes() {
 			<Route index element={<Home />} />
 			<Route path="/customer-leads" element={<CustomerLeads />} />
 			<Route path="/sign-in" element={<SignIn />} />
-			<Route path="/sign-up" element={<SignUp />} />
+			{/**
+			 * 	This is not being used in site currently, but is being left in the event it is needed again
+			 *  <Route path="/sign-up" element={<SignUp />} /> */}
 			<Route path="/users">
 				<Route index element={<Users />} />
 				<Route path=":id" element={<SingleUser />} />

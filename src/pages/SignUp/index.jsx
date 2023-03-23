@@ -1,46 +1,6 @@
-import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-
-export default function SignUp() {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-
-	const signUp = (e) => {
-		e.preventDefault();
-		createUser()
-		createUserWithEmailAndPassword(auth, email, password)
-			.then((userCredential) => {
-				document.write('Account created!');
-				console.log(userCredential);
-			})
-			.catch((error) => {
-				document.write('Failed to create account');
-				console.log(error);
-			});
-	};
-
-	return (
-		<div className="sign-in-container">
-			<form onSubmit={signUp}>
-				<h1>Create Account</h1>
-				<input
-					type="email"
-					placeholder="Email Address"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-				<input
-					type="password"
-					placeholder="Password"
-					value={password}
-					onChange={(e) => setPassword(e.target.value)}
-				/>
-				<button type="submit">Sign Up</button>
-			</form>
-		</div>
-	);
-}
-
+/* eslint-disable object-shorthand */
+/* eslint-disable no-unused-vars */
+//! This file is not being used in website currently, there is no need for it
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import {
@@ -53,15 +13,18 @@ import {
 	Typography,
 } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
-import { TextInput } from 'components/FormikMuiFields';
+import { TextInput, Select } from 'components/FormikMuiFields';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { authenticateUser } from 'utils/data/users';
+import { createUser } from 'utils/data/users';
 import { useAuthContext } from 'contexts/Auth';
 import { useNavigate } from 'react-router-dom';
-import { auth } from 'utils/firebase';
-import { createUser } from 'utils/data/users';
+
+const roles = ['Admin', 'Sales', 'Customer', 'Operations', 'Field'];
 
 const schema = Yup.object().shape({
+	firstName: Yup.string().required('First Name is Required'),
+	lastName: Yup.string().required('Last Name is Required'),
+	phone: Yup.string().required('Phone Number is required'),
 	email: Yup.string()
 		.required('Email is required')
 		.matches(
@@ -97,11 +60,28 @@ export default function SignUp() {
 		>
 			<Formik
 				validationSchema={schema}
-				initialValues={{ email: '', password: '' }}
-				onSubmit={async ({ email, password }, { setSubmitting }) => {
+				initialValues={{
+					firstName: '',
+					lastName: '',
+					phone: '',
+					email: '',
+					password: '',
+				}}
+				onSubmit={async (
+					{ firstName, lastName, phone, email, password, role },
+					{ setSubmitting }
+				) => {
 					try {
 						setSubmitting(true);
-						const user = await authenticateUser(email, password);
+						const info = {
+							firstName: firstName,
+							lastName: lastName,
+							phone: phone,
+							email: email,
+							password: password,
+							role: role,
+						};
+						const user = await createUser(info);
 						setUser(user);
 						navigate('/');
 					} catch (e) {
@@ -123,6 +103,24 @@ export default function SignUp() {
 							>
 								Sign Up
 							</Typography>
+							<Field
+								name="firstName"
+								component={TextInput}
+								placeholder="First Name"
+								required
+							/>
+							<Field
+								name="lastName"
+								component={TextInput}
+								placeholder="Last Name"
+								required
+							/>
+							<Field
+								name="phone"
+								component={TextInput}
+								placeholder="Phone Number"
+								required
+							/>
 							<Field
 								name="email"
 								component={TextInput}
@@ -148,6 +146,17 @@ export default function SignUp() {
 										</InputAdornment>
 									),
 								}}
+								required
+							/>
+							<Field
+								name="role"
+								label="Role"
+								component={Select}
+								options={roles.map((r) => ({
+									value: r.toLowerCase(),
+									label: r,
+								}))}
+								placeholder="Role"
 								required
 							/>
 							<Button
