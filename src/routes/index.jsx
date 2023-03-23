@@ -3,11 +3,12 @@ import { Routes as RRDRoutes, Route } from 'react-router-dom';
 import NotFound from 'pages/404';
 import Home from 'pages/Home';
 import CustomerLeads from 'pages/CustomerLeads';
-import SingleUser from 'pages/Users/SingleUser';
+import ProjectViews from 'pages/ProjectViews';
 import ServiceRequest from 'pages/ServiceRequest';
-import Users from 'pages/Users';
+import SingleUser from 'pages/Users/SingleUser';
 import SignIn from 'pages/SignIn';
 import SignUp from 'pages/SignUp';
+import Users from 'pages/Users';
 
 function Routes() {
 	return (
@@ -21,6 +22,7 @@ function Routes() {
 				<Route path=":id" element={<SingleUser />} />
 			</Route>
 			<Route path="/service-request" element={<ServiceRequest />} />
+			<Route path="/project-views" element={<ProjectViews />} />
 			<Route path="*" element={<NotFound />} />
 		</RRDRoutes>
 	);

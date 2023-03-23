@@ -35,16 +35,24 @@ export const getUserById = async (id) => {
 };
 
 export const getUserByEmail = async (email) => {
+	//!
+	console.log('Before getDocs call');
 	const userDoc = await getDocs(
 		query(collection(db, 'users'), where('email', '==', email))
 	);
 	const result = [];
+	//!
+	console.log('Before docs forEach loop');
 	userDoc.forEach((uDoc) => {
 		result.push({
 			id: uDoc.id,
 			...uDoc.data(),
 		});
 	});
+	//!
+	console.log('after forEach loop');
+	console.log(result);
+	console.log(userDoc);
 	if (result.length === 0) throw new Error('No user with provided email found');
 	return result[0];
 };
@@ -70,9 +78,17 @@ export const createUser = async (user) => {
 
 export const authenticateUser = async (email, password) => {
 	try {
+		//!
+		console.log('Before calling signInWithEmailAndPassword');
 		const res = await signInWithEmailAndPassword(auth, email, password);
+		//!
+		console.log('Successfully calles signIn function');
 		const { user } = res;
+		//!
+		console.log('Before getUserByEmail');
 		const userObj = await getUserByEmail(user.email);
+		//!
+		console.log('After getUserByemail');
 		return userObj;
 	} catch (e) {
 		throw new Error('Email or password is incorrect');
