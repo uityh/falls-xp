@@ -25,13 +25,13 @@ export default function SignUp() {
 				<h1>Create Account</h1>
 				<input
 					type="email"
-					placeholder="Enter your email"
+					placeholder="Email Address"
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
 				/>
 				<input
 					type="password"
-					placeholder="Enter your password"
+					placeholder="Password"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 				/>

@@ -1,13 +1,6 @@
 * {
 	margin: 0;
 }
-.submit-service-request {
-	text-align: center;
-}
-.page-header {
-	background-color: lightgrey;
-	padding: 24px;
-}
 
 .notFound__container {
 	width: 100%;
@@ -32,4 +25,13 @@
 
 .notFound__content__btn {
 	border: 1px solid #1976d2 !important;
+}
+
+.page-header {
+	background-color: lightgrey;
+	padding: 24px;
+}
+
+.submit-service-request {
+	text-align: center;
 }

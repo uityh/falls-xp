@@ -17,6 +17,7 @@ export default function ServiceRequest() {
 			);
 			document.getElementById('service-request-form').reset();
 		} catch (error) {
+			// eslint-disable-next-line
 			console.log(error.message);
 		}
 	};

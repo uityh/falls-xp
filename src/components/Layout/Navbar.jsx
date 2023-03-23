@@ -6,22 +6,90 @@ function Navbar() {
 	return (
 		<AppBar
 			sx={{
-				backgroundColor: 'rgba(255,255,255,0.8)',
+				backgroundColor: 'darkblue',
 				backdropFilter: 'blur(20px)',
-				color: 'black',
 			}}
 			position="sticky"
 		>
 			<Container>
 				<Toolbar disableGutters>
-					<Box sx={{ mr: 2 }}>Falls XP</Box>
+					<Box
+						sx={{
+							mr: 2,
+							color: 'white',
+							fontStyle: 'italic',
+							fontSize: '22px',
+						}}
+					>
+						Falls XP
+					</Box>
 					<Stack gap={2} direction="row">
-						<NavLink to="/">Home</NavLink>
-						<NavLink to="/sign-in">Sign In</NavLink>
-						<NavLink to="/sign-up">Sign Up</NavLink>
-						<NavLink to="/users">Users</NavLink>
-						<NavLink to="/customer-leads">Customer Leads</NavLink>
-						<NavLink to="/service-request">Service Request</NavLink>
+						<NavLink
+							to="/"
+							style={({ isActive }) => {
+								return {
+									textDecoration: 'none',
+									color: isActive ? 'orange' : 'white',
+								};
+							}}
+						>
+							Home
+						</NavLink>
+						<NavLink
+							to="/sign-in"
+							style={({ isActive }) => {
+								return {
+									textDecoration: 'none',
+									color: isActive ? 'orange' : 'white',
+								};
+							}}
+						>
+							Sign In
+						</NavLink>
+						<NavLink
+							to="/sign-up"
+							style={({ isActive }) => {
+								return {
+									textDecoration: 'none',
+									color: isActive ? 'orange' : 'white',
+								};
+							}}
+						>
+							Sign Up
+						</NavLink>
+						<NavLink
+							to="/users"
+							style={({ isActive }) => {
+								return {
+									textDecoration: 'none',
+									color: isActive ? 'orange' : 'white',
+								};
+							}}
+						>
+							Users
+						</NavLink>
+						<NavLink
+							to="/customer-leads"
+							style={({ isActive }) => {
+								return {
+									textDecoration: 'none',
+									color: isActive ? 'orange' : 'white',
+								};
+							}}
+						>
+							Customer Leads
+						</NavLink>
+						<NavLink
+							to="/service-request"
+							style={({ isActive }) => {
+								return {
+									textDecoration: 'none',
+									color: isActive ? 'orange' : 'white',
+								};
+							}}
+						>
+							Service Request
+						</NavLink>
 					</Stack>
 				</Toolbar>
 			</Container>

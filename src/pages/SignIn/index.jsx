@@ -60,6 +60,7 @@ export default function SignIn() {
 						setUser(user);
 						navigate('/');
 					} catch (e) {
+						// eslint-disable-next-line
 						console.log(e);
 					} finally {
 						setSubmitting(false);
@@ -77,10 +78,16 @@ export default function SignIn() {
 							>
 								Sign In
 							</Typography>
-							<Field name="email" component={TextInput} required />
+							<Field
+								name="email"
+								component={TextInput}
+								placeholder="Email Address"
+								required
+							/>
 							<Field
 								name="password"
 								component={TextInput}
+								placeholder="Password"
 								type={showPassword ? 'text' : 'password'}
 								InputProps={{
 									endAdornment: (
