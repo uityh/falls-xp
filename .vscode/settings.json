@@ -3,5 +3,8 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnPaste": true,
 	"prettier.useTabs": true,
-	"files.eol": "\n"
+	"files.eol": "\n",
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+	}
 }

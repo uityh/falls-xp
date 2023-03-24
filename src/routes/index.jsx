@@ -4,6 +4,7 @@ import NotFound from 'pages/404';
 import Home from 'pages/Home';
 import CustomerLeads from 'pages/CustomerLeads';
 import ProjectViews from 'pages/ProjectViews';
+import PhotoReview from 'pages/PhotoReview';
 import ServiceRequest from 'pages/ServiceRequest';
 import SingleUser from 'pages/Users/SingleUser';
 import SignIn from 'pages/SignIn';
@@ -25,6 +26,7 @@ function Routes() {
 			</Route>
 			<Route path="/service-request" element={<ServiceRequest />} />
 			<Route path="/project-views" element={<ProjectViews />} />
+			<Route path="/photo-review/:projectid" element={<PhotoReview />} />
 			<Route path="*" element={<NotFound />} />
 		</RRDRoutes>
 	);

@@ -1,0 +1,15 @@
+.review-photo-thumbnail { 
+	width: 125px; 
+	height: 125px; 
+	margin: 5px 5px 5px 5px;
+	padding: 5px; 
+	position: relative; 
+}
+
+.review-photo-large { 
+	max-width: 500px; 
+	max-height: 500px; 
+	margin: 5px 5px 5px 5px;
+	padding: 5px; 
+	position: relative; 
+}
