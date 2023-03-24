@@ -2,7 +2,8 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-console */
 import React, { useCallback, useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Typography, Button } from '@mui/material';
 import { useAuthContext } from 'contexts/Auth';
 import { getProjectByInvolvedId } from 'utils/data/projects';
 
@@ -114,6 +115,8 @@ export default function ProjectViews() {
 									{'     '}
 									{project.customerNotes}
 								</Typography>
+								<br />
+								<Link to={`/photo-review/${project.id}`}>View</Link>
 							</div>
 						);
 					})}
