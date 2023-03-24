@@ -3,6 +3,7 @@
 /* eslint-disable no-console */
 /* eslint-disable */
 import React, { useCallback, useEffect, useState } from 'react';
+import {Link} from 'react-router-dom'
 import {
 	Typography,
 	Table,
@@ -10,6 +11,7 @@ import {
 	TableCell,
 	TableHead,
 	TableRow,
+	Button
 } from '@mui/material';
 import { useAuthContext } from 'contexts/Auth';
 import { getProjectByInvolvedId } from 'utils/data/projects';
@@ -34,7 +36,7 @@ export default function ProjectViews() {
 			// Need to get any projects they are assigned to, show them info relevant to their job
 		} else if (user.role === 'sales') {
 			// Need to get any projects they have been involved in starting, show sales analytic info
-			headers = ['ID', 'Tasks', 'Status', 'Address', 'Cost', 'Customer Notes'];
+			headers = ['ID', 'Tasks', 'Status', 'Address', 'Cost', 'Customer Notes', 'Action'];
 			return (
 				<div>
 					<Typography className="body-text">
@@ -68,6 +70,11 @@ export default function ProjectViews() {
 										{project.cost === 0 ? 'TBD' : project.cost}
 									</TableCell>
 									<TableCell>{project.customerNotes}</TableCell>
+									{
+										project.tasks.includes('initial inspection') 
+										? <TableCell><Link to={`/photo-review/${project.id}`}><Button variant='contained'>View Photos</Button></Link></TableCell> :
+										<TableCell></TableCell>
+									}
 								</TableRow>
 							))}
 						</TableBody>

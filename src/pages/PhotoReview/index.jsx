@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Box, Typography, Card, Button } from '@mui/material';
+import { Box, Typography, Card, Button, IconButton, FormControl, TextField } from '@mui/material';
+
+import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
+import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 
 import { getProjectByProjectId } from '../../utils/data/projects';
 // eAE62yKcuRK4OCQYvmHc
@@ -17,15 +20,15 @@ function PhotoReview() {
 	const [projectData, setProjectData] = useState({});
 	const [photoIdx, setPhotoIdx] = useState(0);
 	const [photoPage, setPhotoPage] = useState(1);
+	const [photoPages, setPhotoPages] = useState(1);
 
 	const MAX_PHOTOS = 4;
-	let photoPages = 1;
 
 	useEffect(() => {
 		const fetchProject = async () => {
 			const project = await getProjectByProjectId(projectid);
 			setProjectData(project);
-			photoPages = Math.ceil(project.imageUrls.length / MAX_PHOTOS);
+			setPhotoPages(Math.ceil(project.imageUrls.length / MAX_PHOTOS));
 		};
 		fetchProject();
 	}, [projectid]);
@@ -41,6 +44,7 @@ function PhotoReview() {
 		return <div>No photos found for this project</div>;
 	}
 
+	console.log(photoPages);
 	return (
 		<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
 			<Typography variant="h1">Inspection Photo Review</Typography>
@@ -56,13 +60,17 @@ function PhotoReview() {
 				></img>
 			</Card>
 			<Box sx={{ display: 'flex', flexDirection: 'row', margin: 'auto' }}>
-				<Button
-					onClick={() => {
-						setPhotoPage(photoPage - 1);
-					}}
-				>
-					Previous
-				</Button>
+				{	
+					photoPage > 1 &&
+					<IconButton 
+						size="large"
+						onClick={() => {
+							setPhotoPage(photoPage - 1);
+						}}
+					>
+						<ArrowLeftRoundedIcon fontSize="large"/>
+					</IconButton>
+				}
 				{projectData.imageUrls
 					.slice((photoPage - 1) * MAX_PHOTOS, photoPage * MAX_PHOTOS)
 					.map((url, idx) => {
@@ -87,15 +95,38 @@ function PhotoReview() {
 							</Card>
 						);
 					})}
-				<Button
+				{	photoPage < photoPages &&
+					<IconButton size="large"
 					onClick={() => {
 						setPhotoPage(photoPage + 1);
 					}}
 				>
-					Next
-				</Button>
+					<ArrowRightRoundedIcon fontSize="large"/>
+				</IconButton>
+				}
 			</Box>
-			<Box></Box>
+			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+				<FormControl>
+					<TextField
+						label='Estimated Cost'
+						type="number"
+						InputProps={{ inputProps: { min: 0 }}}
+						variant="filled"
+						required
+					>
+					</TextField>
+					<TextField
+						label="Estimated Completion Date"
+						variant="filled"
+						type="date"
+						margin="dense"
+						required
+						InputLabelProps={{ shrink: true }}
+					/>
+					<Button variant="contained">Approve</Button>
+					<Button variant="contained">Reject</Button>
+				</FormControl>
+			</Box>
 		</Box>
 	);
 }
