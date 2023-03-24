@@ -9,22 +9,31 @@ import { getProjectByProjectId } from '../../utils/data/projects';
 // eAE62yKcuRK4OCQYvmHc
 // 308 Negra Arroyo Lane
 
-import styles from '../../styles/photoreview.css';
+import '../../styles/photoreview.css';
 
 function PhotoReview() {
 	const { projectid } = useParams();
 
 	const [projectData, setProjectData] = useState({});
 	const [photoIdx, setPhotoIdx] = useState(0);
+	const [photoPage, setPhotoPage] = useState(1);
+
+	const MAX_PHOTOS = 4;
+	let photoPages = 1;
 
 	useEffect(() => {
 		const fetchProject = async () => {
 			const project = await getProjectByProjectId(projectid);
 			setProjectData(project);
-			console.log(project);
+			photoPages = Math.ceil(project.imageUrls.length / MAX_PHOTOS);
 		};
 		fetchProject();
 	}, [projectid]);
+
+	const handleViewPhotoButton = (event, idx) => {
+		console.log(event, idx);
+		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
+	};
 
 	if (Object.keys(projectData).length === 0) {
 		return <div>Loading...</div>;
@@ -37,7 +46,7 @@ function PhotoReview() {
 			<Typography variant="h1">Inspection Photo Review</Typography>
 			<Typography>Project ID: {projectid}</Typography>
 			<Typography>Address: {projectData.address}</Typography>
-			<Card>
+			<Card sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
 				<Typography>
 					Photo {photoIdx + 1} of {projectData.imageUrls.length}
 				</Typography>
@@ -46,29 +55,47 @@ function PhotoReview() {
 					src={projectData.imageUrls[photoIdx]}
 				></img>
 			</Card>
-			<Box sx={{ display: 'flex', flexDirection: 'row' }}>
-				{projectData.imageUrls.map((url, idx) => {
-					return (
-						<Card
-							sx={{
-								m: 2,
-								display: 'flex',
-								flexDirection: 'column',
-								border: 'grey 1px solid'
-							}}
-						>
-							<img className="review-photo-thumbnail" src={url}></img>
-							<Button
-								onClick={() => setPhotoIdx(idx)}
-								variant="contained"
-								sx={{ maxWidth: '50%', margin: 'auto' }}
+			<Box sx={{ display: 'flex', flexDirection: 'row', margin: 'auto' }}>
+				<Button
+					onClick={() => {
+						setPhotoPage(photoPage - 1);
+					}}
+				>
+					Previous
+				</Button>
+				{projectData.imageUrls
+					.slice((photoPage - 1) * MAX_PHOTOS, photoPage * MAX_PHOTOS)
+					.map((url, idx) => {
+						return (
+							<Card
+								key={idx}
+								sx={{
+									m: 2,
+									display: 'flex',
+									flexDirection: 'column',
+									border: 'grey 1px solid'
+								}}
 							>
-								View
-							</Button>
-						</Card>
-					);
-				})}
+								<img className="review-photo-thumbnail" src={url}></img>
+								<Button
+									onClick={(event) => handleViewPhotoButton(event, idx)}
+									variant="contained"
+									sx={{ maxWidth: '50%', margin: 'auto' }}
+								>
+									View
+								</Button>
+							</Card>
+						);
+					})}
+				<Button
+					onClick={() => {
+						setPhotoPage(photoPage + 1);
+					}}
+				>
+					Next
+				</Button>
 			</Box>
+			<Box></Box>
 		</Box>
 	);
 }

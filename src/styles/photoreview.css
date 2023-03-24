@@ -7,9 +7,14 @@
 }
 
 .review-photo-large { 
-	max-width: 500px; 
-	max-height: 500px; 
+	max-width: 1000px; 
+	max-height: 1000px; 
 	margin: 5px 5px 5px 5px;
 	padding: 5px; 
 	position: relative; 
+}
+
+.selected-photo-card { 
+	background-color: blueviolet;
+
 }

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-console */
+/* eslint-disable */
 import React, { useCallback, useEffect, useState } from 'react';
 import {
 	Typography,
