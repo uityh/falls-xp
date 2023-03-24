@@ -37,14 +37,14 @@ export const getProjectByInvolvedId = async (id) => {
 	if (thisUser.role === 'customer') {
 		foundProjects = query(
 			collection(db, 'projects'),
-			where('customerId', '===', id)
+			where('customerId', '==', id)
 		);
 	} else if (thisUser.role === 'sales') {
 		foundProjects = query(
 			collection(db, 'projects'),
-			where('salesRepId', '===', id)
+			where('salesRepId', '==', id)
 		);
-	} else if (thisUser.role === 'field') {
+	} else {
 		foundProjects = query(
 			collection(db, 'projects'),
 			where('assignedWorkers', 'array-contains', id)
