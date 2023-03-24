@@ -1,17 +1,27 @@
 /* eslint-disable no-console */
 import React from 'react';
-import { auth } from 'utils/firebase';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { createServiceRequest } from '../../utils/data/ServiceRequest';
+import { TextField, Button, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { useAuthContext } from 'contexts/Auth';
+import { createServiceRequest } from 'utils/data/ServiceRequest';
+import { getUserById } from 'utils/data/users';
 
 export default function ServiceRequest() {
+	const { user } = useAuthContext();
 	const submitRequest = async (e) => {
 		e.preventDefault();
 		try {
+			if (user === null) {
+				throw new Error('You must be logged in to submit a Service Request');
+			}
+			const customer = await getUserById(e.target.elements.customerId.value);
+			if (customer.role !== 'customer') {
+				console.log('Error from frontend');
+				throw new Error('That is not a real customer!');
+			}
 			await createServiceRequest(
 				e.target.elements.customerId.value,
-				auth.currentUser.uid,
+				user.id,
 				e.target.elements.address.value,
 				e.target.elements.startDate.value,
 				e.target.elements.description.value
@@ -21,14 +31,30 @@ export default function ServiceRequest() {
 			document.getElementById('success-field').innerHTML =
 				'<h2>Service Request successfully added!</h2>';
 		} catch (error) {
-			console.log(error.message);
 			document.getElementById(
 				'error-field'
 			).innerHTML = `<h2>Error: ${error.message}</h2>`;
 			document.getElementById('success-field').innerHTML = '';
 		}
 	};
-
+	if (user === null) {
+		return (
+			<div>
+				<Typography>You are not logged in.</Typography>
+				<Link to="/sign-in">Click here to Sign In</Link>
+			</div>
+		);
+	}
+	if (user.role !== 'sales') {
+		return (
+			<div>
+				<Typography>
+					You are not a sales user. You do not have access to this page
+				</Typography>
+				<Link to="/">Return Home</Link>
+			</div>
+		);
+	}
 	return (
 		<div className="submit-service-request">
 			<h1 className="page-header">Service Request</h1>

@@ -1,9 +1,16 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-console */
+/* eslint-disable */
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Typography, Button } from '@mui/material';
+import {
+	Typography,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+} from '@mui/material';
 import { useAuthContext } from 'contexts/Auth';
 import { getProjectByInvolvedId } from 'utils/data/projects';
 
@@ -19,6 +26,7 @@ export default function ProjectViews() {
 	useEffect(() => {
 		getProjects();
 	}, [getProjects]);
+	let headers = [];
 	if (user !== null) {
 		if (user.role === 'admin') {
 			// Need to get all active projects (I think)
@@ -26,6 +34,7 @@ export default function ProjectViews() {
 			// Need to get any projects they are assigned to, show them info relevant to their job
 		} else if (user.role === 'sales') {
 			// Need to get any projects they have been involved in starting, show sales analytic info
+			headers = ['ID', 'Tasks', 'Status', 'Address', 'Cost', 'Customer Notes'];
 			return (
 				<div>
 					<Typography className="body-text">
@@ -38,93 +47,37 @@ export default function ProjectViews() {
 					>
 						Projects:{' '}
 					</Typography>
-					{involvedProjects.map((project) => {
-						return (
-							<div key={project.id}>
-								<br />
-								<Typography
-									className="body-subheading"
-									sx={{ fontWeight: 'bold', fontSize: '18px' }}
-								>
-									Project ID:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.id}
-								</Typography>
-								<br />
-
-								<Typography className="body-subheading">
-									Project Tasks:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.tasks}
-								</Typography>
-								<br />
-
-								<Typography className="body-subheading">
-									Project Status:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.status}
-								</Typography>
-								<br />
-
-								<Typography className="body-subheading">
-									Project Address:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.address}
-								</Typography>
-								<br />
-
-								<Typography className="body-subheading">
-									Project Cost:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.cost}
-								</Typography>
-								<br />
-
-								<Typography className="body-subheading">
-									Project Customer Notes:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.customerNotes}
-								</Typography>
-								<br />
-								<Link to={`/photo-review/${project.id}`}>View</Link>
-							</div>
-						);
-					})}
+					<Table sx={{ p: 2 }}>
+						<TableHead>
+							<TableRow>
+								{headers.map((headCell) => (
+									<TableCell key={headCell} sx={{ fontWeight: 'bold' }}>
+										{headCell}
+									</TableCell>
+								))}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{involvedProjects.map((project) => (
+								<TableRow key={project.id}>
+									<TableCell>{project.id}</TableCell>
+									<TableCell>{project.tasks}</TableCell>
+									<TableCell>{project.status}</TableCell>
+									<TableCell>{project.address}</TableCell>
+									<TableCell>
+										{project.cost === 0 ? 'TBD' : project.cost}
+									</TableCell>
+									<TableCell>{project.customerNotes}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
 				</div>
 			);
 		} else if (user.role === 'field') {
 			// Need to get projects they're assigned to, show the pics from the sites
 			// TODO: Put in a connection to view the pictures for each project
+			headers = ['ID', 'Tasks', 'Status', 'Address', 'Customer Notes'];
 			return (
 				<div>
 					<Typography className="body-text">
@@ -137,62 +90,28 @@ export default function ProjectViews() {
 					>
 						Projects:{' '}
 					</Typography>
-					{involvedProjects.map((project) => {
-						return (
-							<div key={project.id}>
-								<br />
-								<Typography
-									className="body-subheading"
-									sx={{ fontWeight: 'bold', fontSize: '18px' }}
-								>
-									Project ID:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.id}
-								</Typography>
-								<br />
-
-								<Typography className="body-subheading">
-									Project Tasks:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.tasks}
-								</Typography>
-								<br />
-
-								<Typography className="body-subheading">
-									Project Status:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.status}
-								</Typography>
-								<br />
-
-								<Typography className="body-subheading">
-									Project Address:
-								</Typography>
-								<Typography
-									className="project-text"
-									sx={{ fontSize: '14px', paddingLeft: '5px' }}
-								>
-									{'     '}
-									{project.address}
-								</Typography>
-							</div>
-						);
-					})}
+					<Table sx={{ p: 2 }}>
+						<TableHead>
+							<TableRow>
+								{headers.map((headCell) => (
+									<TableCell key={headCell} sx={{ fontWeight: 'bold' }}>
+										{headCell}
+									</TableCell>
+								))}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{involvedProjects.map((project) => (
+								<TableRow key={project.id}>
+									<TableCell>{project.id}</TableCell>
+									<TableCell>{project.tasks}</TableCell>
+									<TableCell>{project.status}</TableCell>
+									<TableCell>{project.address}</TableCell>
+									<TableCell>{project.customerNotes}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
 				</div>
 			);
 		} else if (user.role === 'customer') {

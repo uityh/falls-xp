@@ -5,6 +5,6 @@
 	"prettier.useTabs": true,
 	"files.eol": "\n",
 	"[javascriptreact]": {
-		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	}
 }
