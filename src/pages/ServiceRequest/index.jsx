@@ -41,80 +41,80 @@ export default function ServiceRequest() {
 		return (
 			<div>
 				<Typography>You are not logged in.</Typography>
-				<Link to="/sign-in">Click here to Sign In</Link>
+				<Link to="/sign-in">Sign In</Link>
 			</div>
 		);
 	}
-	if (user.role !== 'sales') {
+	if (user.role === 'sales' || user.role === 'admin') {
 		return (
-			<div>
-				<Typography>
-					You are not a sales user. You do not have access to this page
-				</Typography>
-				<Link to="/">Return Home</Link>
+			<div className="submit-service-request">
+				<h1 className="page-header">Service Request</h1>
+				<form id="service-request-form" onSubmit={submitRequest}>
+					<TextField
+						id="customerId"
+						label="Customer ID"
+						variant="filled"
+						required
+						size="small"
+						margin="dense"
+						helperText="Enter the customer's ID"
+					/>
+					<br />
+					<TextField
+						id="address"
+						label="Address"
+						variant="filled"
+						required
+						size="small"
+						margin="dense"
+						helperText="Enter the customer's address"
+					/>
+					<br />
+					<TextField
+						id="startDate"
+						label="Start Date"
+						variant="filled"
+						type="date"
+						size="small"
+						margin="dense"
+						required
+						InputLabelProps={{ shrink: true }}
+					/>
+					<br />
+					<TextField
+						id="description"
+						label="Description"
+						variant="filled"
+						margin="dense"
+						multiline
+						placeholder="Enter a Description"
+					/>
+					<br />
+					<Button
+						variant="contained"
+						type="submit"
+						margin="dense"
+						sx={{
+							color: 'black',
+							backgroundColor: 'lightgrey',
+							borderColor: 'black',
+							borderRadius: '20px',
+						}}
+					>
+						Submit Request
+					</Button>
+				</form>
+				<div id="error-field" className="error-field" />
+				<div id="success-field" className="success-field" />
 			</div>
 		);
 	}
 	return (
-		<div className="submit-service-request">
-			<h1 className="page-header">Service Request</h1>
-			<form id="service-request-form" onSubmit={submitRequest}>
-				<TextField
-					id="customerId"
-					label="Customer ID"
-					variant="filled"
-					required
-					size="small"
-					margin="dense"
-					helperText="Enter the customer's ID"
-				/>
-				<br />
-				<TextField
-					id="address"
-					label="Address"
-					variant="filled"
-					required
-					size="small"
-					margin="dense"
-					helperText="Enter the customer's address"
-				/>
-				<br />
-				<TextField
-					id="startDate"
-					label="Start Date"
-					variant="filled"
-					type="date"
-					size="small"
-					margin="dense"
-					required
-					InputLabelProps={{ shrink: true }}
-				/>
-				<br />
-				<TextField
-					id="description"
-					label="Description"
-					variant="filled"
-					margin="dense"
-					multiline
-					placeholder="Enter a Description"
-				/>
-				<br />
-				<Button
-					variant="contained"
-					type="submit"
-					margin="dense"
-					sx={{
-						color: 'black',
-						backgroundColor: 'lightgrey',
-						borderColor: 'black',
-						borderRadius: '20px',
-					}}
-				>
-					Submit Request
-				</Button>
-			</form>
-			<div id="error-field" className="error-field" />
-			<div id="success-field" className="success-field" />
+		<div>
+			<Typography>
+				You are not a sales user. You do not have access to this page
+			</Typography>
+			<Link to="/">Return Home</Link>
 		</div>
 	);
 }
