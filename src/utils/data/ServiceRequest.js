@@ -1,3 +1,7 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-await */
+/* eslint-disable import/prefer-default-export */
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from 'utils/firebase';
 import { checkString, checkDateString } from 'utils/helpers/validation';
@@ -13,7 +17,9 @@ export const createServiceRequest = async (
 	salesRepId = checkString(salesRepId, 'salesRepId');
 	address = checkString(address, 'address');
 	startDate = checkDateString(startDate, 'startDate');
-	customerNotes = checkString(customerNotes, 'customerNotes');
+	if (customerNotes !== '') {
+		customerNotes = checkString(customerNotes, 'customerNotes');
+	}
 
 	startDate.setHours(0, 0, 0);
 
@@ -22,7 +28,7 @@ export const createServiceRequest = async (
 		salesRepId: salesRepId,
 		startDate: startDate,
 		address: address,
-		onsiteWorkers: [],
+		assignedWorkers: [],
 		status: 'not started',
 		tasks: ['initial inspection'],
 		cost: 0,
