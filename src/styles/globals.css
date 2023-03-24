@@ -2,6 +2,12 @@
 	margin: 0;
 }
 
+.error-field {
+	color: red;
+	padding: 20px;
+	font-size: 12px;
+}
+
 .notFound__container {
 	width: 100%;
 	min-height: calc(100vh - 200px);
@@ -34,4 +40,10 @@
 
 .submit-service-request {
 	text-align: center;
+}
+
+.success-field {
+	color: green;
+	padding: 20px;
+	font-size: 12px;
 }

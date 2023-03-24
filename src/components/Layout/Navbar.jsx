@@ -46,7 +46,7 @@ function Navbar() {
 						>
 							Sign In
 						</NavLink>
-						<NavLink
+						{/* <NavLink
 							to="/sign-up"
 							style={({ isActive }) => {
 								return {
@@ -56,7 +56,7 @@ function Navbar() {
 							}}
 						>
 							Sign Up
-						</NavLink>
+						</NavLink> */}
 						<NavLink
 							to="/users"
 							style={({ isActive }) => {
@@ -89,6 +89,17 @@ function Navbar() {
 							}}
 						>
 							Service Request
+						</NavLink>
+						<NavLink
+							to="/project-views"
+							style={({ isActive }) => {
+								return {
+									textDecoration: 'none',
+									color: isActive ? 'orange' : 'white',
+								};
+							}}
+						>
+							View your Projects
 						</NavLink>
 					</Stack>
 				</Toolbar>

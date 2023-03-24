@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
 	collection,
 	getDocs,
@@ -59,15 +60,6 @@ const checkEmailExists = async (email) => {
 	return false;
 };
 
-export const createUser = async (user) => {
-	if (checkEmailExists(user.email))
-		throw new Error('An account with this email already exists');
-	const userDoc = await addDoc(collection(db, 'users'), user);
-	await createUserWithEmailAndPassword(auth, user.email, userDoc.id);
-	await sendPasswordResetEmail(auth, user.email);
-	return getUserById(userDoc.id);
-};
-
 export const authenticateUser = async (email, password) => {
 	try {
 		const res = await signInWithEmailAndPassword(auth, email, password);
@@ -78,3 +70,24 @@ export const authenticateUser = async (email, password) => {
 		throw new Error('Email or password is incorrect');
 	}
 };
+
+export const createUser = async (user) => {
+	if (await checkEmailExists(user.email))
+		throw new Error('An account with this email already exists');
+	const userDoc = await addDoc(collection(db, 'users'), user);
+	await createUserWithEmailAndPassword(auth, user.email, userDoc.id);
+	await sendPasswordResetEmail(auth, user.email);
+	return getUserById(userDoc.id);
+};
+
+// export const createUserPassword = async (user) => {
+// 	if (checkEmailExists(user.email))
+// 		throw new Error('An account with this email already exists');
+// 	const { password } = user;
+// 	const uploadData = user;
+// 	delete uploadData.password;
+// 	const userDoc = await addDoc(collection(db, 'users'), uploadData);
+// 	await createUserWithEmailAndPassword(auth, user.email, password);
+// 	await authenticateUser(user.email, password);
+// 	return getUserById(userDoc.id);
+// };
