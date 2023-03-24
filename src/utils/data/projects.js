@@ -34,6 +34,9 @@ export const getProjectByInvolvedId = async (id) => {
 	const thisUser = await getUserById(id);
 	const result = [];
 	let foundProjects = null;
+	if (thisUser.role === 'admin') {
+		return getAllProjects();
+	}
 	if (thisUser.role === 'customer') {
 		foundProjects = query(
 			collection(db, 'projects'),

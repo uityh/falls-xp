@@ -37,6 +37,17 @@ export default function ProjectViews() {
 		} else if (user.role === 'sales') {
 			// Need to get any projects they have been involved in starting, show sales analytic info
 			headers = ['ID', 'Tasks', 'Status', 'Address', 'Cost', 'Customer Notes', 'Action'];
+			// Gets all active projects
+			// TODO: Put in a connection to view the pictures for each project
+			headers = [
+				'ID',
+				'Tasks',
+				'Status',
+				'Address',
+				'Cost',
+				'Customer Notes',
+				'Assigned Workers',
+			];
 			return (
 				<div>
 					<Typography className="body-text">
@@ -70,19 +81,102 @@ export default function ProjectViews() {
 										{project.cost === 0 ? 'TBD' : project.cost}
 									</TableCell>
 									<TableCell>{project.customerNotes}</TableCell>
-									{
-										project.tasks.includes('initial inspection') 
-										? <TableCell><Link to={`/photo-review/${project.id}`}><Button variant='contained'>View Photos</Button></Link></TableCell> :
-										<TableCell></TableCell>
-									}
+									<TableCell>{project.assignedWorkers}</TableCell>
 								</TableRow>
 							))}
 						</TableBody>
 					</Table>
 				</div>
 			);
-		} else if (user.role === 'field') {
-			// Need to get projects they're assigned to, show the pics from the sites
+		}
+		if (user.role === 'operations') {
+			// Gets any projects they are assigned to, shows relevant info and pictures
+			// TODO: Put in a connection to view the pictures for each project
+			headers = ['ID', 'Tasks', 'Status', 'Address', 'Cost', 'Customer Notes'];
+			return (
+				<div>
+					<Typography className="body-text">
+						Current User: {user.firstName}
+					</Typography>
+					<Typography className="body-text">Role: {user.role}</Typography>
+					<Typography
+						className="body-heading"
+						sx={{ fontWeight: 'bold', fontSize: '22px' }}
+					>
+						Projects:{' '}
+					</Typography>
+					<Table sx={{ p: 2 }}>
+						<TableHead>
+							<TableRow>
+								{headers.map((headCell) => (
+									<TableCell key={headCell} sx={{ fontWeight: 'bold' }}>
+										{headCell}
+									</TableCell>
+								))}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{involvedProjects.map((project) => (
+								<TableRow key={project.id}>
+									<TableCell>{project.id}</TableCell>
+									<TableCell>{project.tasks}</TableCell>
+									<TableCell>{project.status}</TableCell>
+									<TableCell>{project.address}</TableCell>
+									<TableCell>
+										{project.cost === 0 ? 'TBD' : project.cost}
+									</TableCell>
+									<TableCell>{project.customerNotes}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</div>
+			);
+		}
+		if (user.role === 'sales') {
+			// Gets any projects they have been involved in starting, show sales analytic info
+			headers = ['ID', 'Status', 'Address', 'Cost', 'Customer Notes'];
+			return (
+				<div>
+					<Typography className="body-text">
+						Current User: {user.firstName}
+					</Typography>
+					<Typography className="body-text">Role: {user.role}</Typography>
+					<Typography
+						className="body-heading"
+						sx={{ fontWeight: 'bold', fontSize: '22px' }}
+					>
+						Projects:{' '}
+					</Typography>
+					<Table sx={{ p: 2 }}>
+						<TableHead>
+							<TableRow>
+								{headers.map((headCell) => (
+									<TableCell key={headCell} sx={{ fontWeight: 'bold' }}>
+										{headCell}
+									</TableCell>
+								))}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{involvedProjects.map((project) => (
+								<TableRow key={project.id}>
+									<TableCell>{project.id}</TableCell>
+									<TableCell>{project.status}</TableCell>
+									<TableCell>{project.address}</TableCell>
+									<TableCell>
+										{project.cost === 0 ? 'TBD' : project.cost}
+									</TableCell>
+									<TableCell>{project.customerNotes}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</div>
+			);
+		}
+		if (user.role === 'field') {
+			// Gets projects they're assigned to, has relevant info and pictures
 			// TODO: Put in a connection to view the pictures for each project
 			headers = ['ID', 'Tasks', 'Status', 'Address', 'Customer Notes'];
 			return (
