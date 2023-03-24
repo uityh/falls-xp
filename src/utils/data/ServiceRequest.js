@@ -17,7 +17,9 @@ export const createServiceRequest = async (
 	salesRepId = checkString(salesRepId, 'salesRepId');
 	address = checkString(address, 'address');
 	startDate = checkDateString(startDate, 'startDate');
-	customerNotes = checkString(customerNotes, 'customerNotes');
+	if (customerNotes !== '') {
+		customerNotes = checkString(customerNotes, 'customerNotes');
+	}
 
 	startDate.setHours(0, 0, 0);
 
@@ -26,7 +28,7 @@ export const createServiceRequest = async (
 		salesRepId: salesRepId,
 		startDate: startDate,
 		address: address,
-		onsiteWorkers: [],
+		assignedWorkers: [],
 		status: 'not started',
 		tasks: ['initial inspection'],
 		cost: 0,
