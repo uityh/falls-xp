@@ -1,13 +1,12 @@
 import {
-	getStorage,
 	ref,
 	uploadBytes,
 	deleteObject,
 	getDownloadURL,
 } from 'firebase/storage';
+import { storage } from 'utils/firebase';
 
 export const uploadFile = (file, filePath) => {
-	const storage = getStorage();
 	const storageRef = ref(storage, filePath);
 	uploadBytes(storageRef, file)
 		.then((snapshot) => {
@@ -20,7 +19,6 @@ export const uploadFile = (file, filePath) => {
 };
 
 export const deleteFile = (filePath) => {
-	const storage = getStorage();
 	const storageRef = ref(storage, filePath);
 	deleteObject(storageRef)
 		.then(() => {
