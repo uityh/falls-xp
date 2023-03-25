@@ -6,10 +6,9 @@ import {
 	getDownloadURL,
 } from 'firebase/storage';
 
-const storage = getStorage();
-
 export const uploadFile = (file, filePath) => {
-	let storageRef = ref(storage, filePath);
+	const storage = getStorage();
+	const storageRef = ref(storage, filePath);
 	uploadBytes(storageRef, file)
 		.then((snapshot) => {
 			console.log('Uploaded a blob or file!');
@@ -21,7 +20,8 @@ export const uploadFile = (file, filePath) => {
 };
 
 export const deleteFile = (filePath) => {
-	let storageRef = ref(storage, filePath);
+	const storage = getStorage();
+	const storageRef = ref(storage, filePath);
 	deleteObject(storageRef)
 		.then(() => {
 			console.log('File deleted successfully');
