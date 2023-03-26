@@ -9,8 +9,6 @@ import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 
 import { getProjectByProjectId } from '../../utils/data/projects';
-// eAE62yKcuRK4OCQYvmHc
-// 308 Negra Arroyo Lane
 
 import '../../styles/photoreview.css';
 
@@ -28,7 +26,6 @@ function PhotoReview() {
 		const fetchProject = async () => {
 			const project = await getProjectByProjectId(projectid);
 			setProjectData(project);
-			console.log(project);
 			setPhotoPages(Math.ceil(project.imageUrls.length / MAX_PHOTOS));
 		};
 		fetchProject();
@@ -37,6 +34,16 @@ function PhotoReview() {
 	const handleViewPhotoButton = (event, idx) => {
 		console.log(event, idx);
 		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
+	};
+
+	const handleApproveButton = () => {
+		console.log('Approve');
+		// Call data function to approve project
+	};
+
+	const handleRejectButton = () => {
+		console.log('Reject');
+		// Call data function to reject project
 	};
 
 	if (Object.keys(projectData).length === 0) {
