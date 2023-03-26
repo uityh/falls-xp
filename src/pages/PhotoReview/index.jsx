@@ -28,6 +28,7 @@ function PhotoReview() {
 		const fetchProject = async () => {
 			const project = await getProjectByProjectId(projectid);
 			setProjectData(project);
+			console.log(project);
 			setPhotoPages(Math.ceil(project.imageUrls.length / MAX_PHOTOS));
 		};
 		fetchProject();

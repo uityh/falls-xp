@@ -40,5 +40,6 @@ export const createServiceRequest = async (
 		tasks: ['initial inspection'],
 		cost: 0,
 		customerNotes: customerNotes,
+		imageUrls: [],
 	});
 };

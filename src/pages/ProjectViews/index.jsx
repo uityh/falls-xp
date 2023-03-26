@@ -92,7 +92,7 @@ export default function ProjectViews() {
 		if (user.role === 'operations') {
 			// Gets any projects they are assigned to, shows relevant info and pictures
 			// TODO: Put in a connection to view the pictures for each project
-			headers = ['ID', 'Tasks', 'Status', 'Address', 'Cost', 'Customer Notes'];
+			headers = ['ID', 'Tasks', 'Status', 'Address', 'Cost', 'Customer Notes', 'Photos'];
 			return (
 				<div>
 					<Typography className="body-text">
@@ -126,6 +126,11 @@ export default function ProjectViews() {
 										{project.cost === 0 ? 'TBD' : project.cost}
 									</TableCell>
 									<TableCell>{project.customerNotes}</TableCell>
+									{
+										project.tasks.includes('initial inspection') 
+										? <TableCell><Link to={`/photo-review/${project.id}`}><Button variant='contained'>View Photos</Button></Link></TableCell> :
+										<TableCell></TableCell>
+									}
 								</TableRow>
 							))}
 						</TableBody>
