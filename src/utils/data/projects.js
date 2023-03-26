@@ -62,7 +62,11 @@ export const getProjectByInvolvedId = async (id) => {
 	return result;
 };
 
-export const getImageUrls = async (projectId) => {
+export const getImageUrls = async (projectId, testdb) => {
+	if (testdb) {
+		const project = await testdb().collection('projects').doc(projectId).get();
+		return project.data().imageUrls;
+	}
 	const project = await getDoc(doc(db, 'projects', projectId));
 	return project.data().imageUrls;
 };
