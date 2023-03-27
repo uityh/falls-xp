@@ -12,6 +12,8 @@ import { getProjectByProjectId } from '../../utils/data/projects';
 
 import '../../styles/photoreview.css';
 
+
+
 function PhotoReview() {
 	const { projectid } = useParams();
 
@@ -28,7 +30,7 @@ function PhotoReview() {
 			setProjectData(project);
 			setPhotoPages(Math.ceil(project.imageUrls.length / MAX_PHOTOS));
 		};
-		fetchProject();
+			fetchProject();
 	}, [projectid]);
 
 	const handleViewPhotoButton = (event, idx) => {
@@ -54,7 +56,7 @@ function PhotoReview() {
 
 	console.log(photoPages);
 	return (
-		<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+		<Box data-testid='photo-review-box' sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
 			<Typography variant="h1">Inspection Photo Review</Typography>
 			<Typography>Project ID: {projectid}</Typography>
 			<Typography>Address: {projectData.address}</Typography>
