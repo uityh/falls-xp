@@ -101,6 +101,17 @@ function Navbar() {
 						>
 							View your Projects
 						</NavLink>
+						<NavLink
+							to="/dashboard"
+							style={({ isActive }) => {
+								return {
+									textDecoration: 'none',
+									color: isActive ? 'orange' : 'white',
+								};
+							}}
+						>
+							Dashboard
+						</NavLink>
 					</Stack>
 				</Toolbar>
 			</Container>
