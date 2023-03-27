@@ -131,7 +131,7 @@ function PhotoReview() {
 					<TextField
 						label="Estimated Cost"
 						type="number"
-						InputProps={{ inputProps: { min: 0 } }}
+						InputProps={{ inputProps: { min: 1 } }}
 						variant="filled"
 						required
 					></TextField>

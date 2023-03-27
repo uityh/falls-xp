@@ -4,8 +4,6 @@ import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 
-import { Route, MemoryRouter } from 'react-router-dom';
-
 import PhotoReview from 'pages/PhotoReview';
 import { getProjectByProjectId } from 'utils/data/projects';
 
@@ -17,8 +15,6 @@ describe('PhotoReview', () => {
 		expect(tree).toMatchSnapshot();
 	});
 });
-
-
 
 const mockProject = {
 	id: 'F9ieqoKKXEmLOik946Nb',
@@ -41,6 +37,20 @@ const mockProject = {
 	],
 };
 
+const mockProjectNoImg = {
+	id: 'F9ieqoKKXEmLOik946Nb',
+	address: '308 Negra Arroyo Lane',
+	assignedWorkers: [],
+	cost: 0,
+	customerId: 'eAE62yKcuRK4OCQYvmHc',
+	salesRepId: 'smwmzTSYJzeGMbUC5HZm',
+	status: 'not started',
+	startDate: 'March 25, 2023 at 12:00:00 AM UTC-4',
+	customerNotes: 'testing for images',
+	tasks: 'initial inspection',
+	imageUrls: [],
+}
+
 jest.mock('utils/data/projects');
 
 jest.mock('react-router-dom', () => ({
@@ -50,7 +60,7 @@ jest.mock('react-router-dom', () => ({
 	})
 }));
 
-describe('PhotoReview component', () => {
+describe('PhotoReview', () => {
 	beforeEach(() => {
 		getProjectByProjectId.mockResolvedValue(mockProject);
 	});
@@ -108,27 +118,23 @@ describe('PhotoReview component', () => {
 		expect(screen.getByTestId('photo-review-large')).toHaveAttribute('src', mockProject.imageUrls[testIdx]);
 
 	});
-
 });
 
-// describe('PhotoReview', () => {
+describe('PhotoReview', () => {
+	beforeEach(() => {
+		getProjectByProjectId.mockResolvedValue(mockProjectNoImg);
+	});
 
-// 	it('Page renders correctly with data',  async () => {
+	afterEach(() => {
+		jest.resetAllMocks();
+	});
 
-// 		await act( async () => {
-// 			render(
-// 				<MemoryRouter initialEntries={[{pathName: '/photo-review/F9ieqoKKXEmLOik946Nb'}]}>
-// 					<PhotoReview />
-// 				</MemoryRouter>
-// 			);
-
-// 		});
-
-// 		await waitFor(() => {
-// 			expect(screen.findByTestId('photo-review-box')).toBeInTheDocument();
-// 			expect(screen.findByTestId('photo-review-thumbnail-0')).toBeInTheDocument();
-// 			}
-// 		);
-
-// 	})
-// });
+	it('Renders a "no photos" div', async () => {
+		const { container } = render(<PhotoReview/>);
+		await act(async () => {
+			expect(getProjectByProjectId).toHaveBeenCalledTimes(1);
+		});
+		expect(screen.getByText("No photos found for this project")).toBeInTheDocument();
+	});
+});
+	
