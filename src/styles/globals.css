@@ -2,6 +2,22 @@
 	margin: 0;
 }
 
+.body-text {
+	padding-bottom: 10px;
+}
+
+.body-heading {
+	font-weight: bold;
+	display: inline;
+	padding-bottom: 10px;
+}
+
+.body-subheading {
+	font-style: italic;
+	display: inline;
+	padding-bottom: 10px;
+}
+
 .error-field {
 	color: red;
 	padding: 20px;
@@ -36,6 +52,11 @@
 .page-header {
 	background-color: lightgrey;
 	padding: 24px;
+}
+
+.project-text {
+	display: inline;
+	padding-bottom: 10px;
 }
 
 .submit-service-request {
