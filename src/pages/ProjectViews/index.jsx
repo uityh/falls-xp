@@ -70,14 +70,14 @@ export default function ProjectViews() {
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
 									<TableCell>{project.id}</TableCell>
-									<TableCell>{project.tasks}</TableCell>
+									<TableCell>{project.tasks.join(', ')}</TableCell>
 									<TableCell>{project.status}</TableCell>
 									<TableCell>{project.address}</TableCell>
 									<TableCell>
 										{project.cost === 0 ? 'TBD' : project.cost}
 									</TableCell>
 									<TableCell>{project.customerNotes}</TableCell>
-									<TableCell>{project.assignedWorkers}</TableCell>
+									<TableCell>{project.assignedWorkers.join(', ')}</TableCell>
 								</TableRow>
 							))}
 						</TableBody>
@@ -123,7 +123,7 @@ export default function ProjectViews() {
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
 									<TableCell>{project.id}</TableCell>
-									<TableCell>{project.tasks}</TableCell>
+									<TableCell>{project.tasks.join(', ')}</TableCell>
 									<TableCell>{project.status}</TableCell>
 									<TableCell>{project.address}</TableCell>
 									<TableCell>
@@ -218,7 +218,7 @@ export default function ProjectViews() {
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
 									<TableCell>{project.id}</TableCell>
-									<TableCell>{project.tasks}</TableCell>
+									<TableCell>{project.tasks.join(', ')}</TableCell>
 									<TableCell>{project.status}</TableCell>
 									<TableCell>{project.address}</TableCell>
 									<TableCell>{project.customerNotes}</TableCell>
