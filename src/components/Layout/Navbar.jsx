@@ -1,8 +1,10 @@
 import { AppBar, Container, Toolbar, Box, Stack } from '@mui/material';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuthContext } from 'contexts/Auth';
 
 function Navbar() {
+	const { user } = useAuthContext();
 	return (
 		<AppBar
 			sx={{
@@ -79,17 +81,20 @@ function Navbar() {
 						>
 							Customer Leads
 						</NavLink>
-						<NavLink
-							to="/service-request"
-							style={({ isActive }) => {
-								return {
-									textDecoration: 'none',
-									color: isActive ? 'orange' : 'white',
-								};
-							}}
-						>
-							Service Request
-						</NavLink>
+						{user && (user.role === 'sales' || user.role === 'admin') && (
+							<NavLink
+								to="/service-request"
+								style={({ isActive }) => {
+									return {
+										textDecoration: 'none',
+										color: isActive ? 'orange' : 'white',
+									};
+								}}
+							>
+								Service Request
+							</NavLink>
+						)}
+
 						<NavLink
 							to="/project-views"
 							style={({ isActive }) => {
@@ -100,6 +105,17 @@ function Navbar() {
 							}}
 						>
 							View your Projects
+						</NavLink>
+						<NavLink
+							to="/dashboard"
+							style={({ isActive }) => {
+								return {
+									textDecoration: 'none',
+									color: isActive ? 'orange' : 'white',
+								};
+							}}
+						>
+							Dashboard
 						</NavLink>
 						<NavLink
 							to="/project-dashboard"
