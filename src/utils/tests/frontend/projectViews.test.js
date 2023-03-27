@@ -9,17 +9,17 @@ describe('Tests', () => {
 		jest.resetModules();
 		jest.clearAllMocks();
 	});
-	const db = (simulateQueryFilters = false) => {
+	const db = (simulateQueryFilters = false) =>
 		new FakeFirestore(
 			{
 				projects: [
 					{
 						id: 'project1',
+						customerId: 'customer1',
+						customerNotes: '',
 						address: 'anywhere usa',
 						assignedWorkers: ['field1', 'ops1', 'field2'],
-						customerId: 'customer1',
 						cost: 0,
-						customerNotes: '',
 						salesRepId: 'sales1',
 						status: 'not started',
 						startDate: '03-26-2023',
@@ -99,8 +99,24 @@ describe('Tests', () => {
 			},
 			{ simulateQueryFilters }
 		);
-	};
-	describe('Get field1 projects', () => {
-		test();
+	describe('Get user projects', () => {
+		test('Get field1 projects', async () => {
+			const projects = [
+				{
+					id: 'project1',
+					customerId: 'customer1',
+					customerNotes: '',
+					address: 'anywhere usa',
+					assignedWorkers: ['field1', 'ops1', 'field2'],
+					cost: 0,
+					salesRepId: 'sales1',
+					status: 'not started',
+					startDate: '03-26-2023',
+					imageUrls: [],
+				},
+			];
+			const retrievedProjects = await getProjectByInvolvedId('field1', db);
+			expect(projects).toEqual(retrievedProjects);
+		});
 	});
 });

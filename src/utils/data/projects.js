@@ -14,7 +14,7 @@ import { getUserById } from 'utils/data/users';
 
 export const getAllProjects = async (testdb) => {
 	if (testdb) {
-		const projectsCollection = await getDocs(collection(testdb, 'projects'));
+		const projectsCollection = await testdb().collection('projects').get();
 		const result = [];
 		projectsCollection.forEach((projectDoc) => {
 			result.push({
@@ -37,7 +37,7 @@ export const getAllProjects = async (testdb) => {
 
 export const getProjectByProjectId = async (id, testdb) => {
 	if (testdb) {
-		const projectDoc = await getDoc(doc(testdb, 'projects', id));
+		const projectDoc = await testdb().collection('projects').doc(id).get();
 		if (!projectDoc) throw new Error('No project exists for the given Id');
 		return {
 			id,
@@ -71,10 +71,10 @@ export const getProjectByInvolvedId = async (id, testdb) => {
 				where('salesRepId', '==', id)
 			);
 		} else {
-			foundProjects = query(
-				collection(testdb, 'projects'),
-				where('assignedWorkers', 'array-contains', id)
-			);
+			console.log('calling testdb function');
+			foundProjects = testdb()
+				.collection('projects')
+				.where('assignedWorkers', 'array-contains', id);
 		}
 		const projectsDoc = await getDocs(foundProjects);
 		if (!projectsDoc) throw new Error('No projects found for the current user');

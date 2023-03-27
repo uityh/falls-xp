@@ -21,8 +21,10 @@ export default function ProjectViews() {
 	const [involvedProjects, setInvolvedProjects] = useState([]);
 	const getProjects = useCallback(async () => {
 		if (user !== null) {
+			console.log(user.id);
 			const userProjects = await getProjectByInvolvedId(user.id);
 			setInvolvedProjects(userProjects);
+			console.log(userProjects);
 		}
 	}, [user]);
 	useEffect(() => {
