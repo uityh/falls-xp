@@ -3,7 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Box, Typography, Card, Button, IconButton, FormControl, TextField } from '@mui/material';
+import {
+	Box,
+	Typography,
+	Card,
+	Button,
+	IconButton,
+	FormControl,
+	TextField
+} from '@mui/material';
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
@@ -11,8 +19,6 @@ import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 import { getProjectByProjectId } from '../../utils/data/projects';
 
 import '../../styles/photoreview.css';
-
-
 
 function PhotoReview() {
 	const { projectid } = useParams();
@@ -26,11 +32,11 @@ function PhotoReview() {
 
 	useEffect(() => {
 		const fetchProject = async () => {
-			const project = await getProjectByProjectId(projectid);
+			const project = await getProjectByProjectId('F9ieqoKKXEmLOik946Nb');
 			setProjectData(project);
 			setPhotoPages(Math.ceil(project.imageUrls.length / MAX_PHOTOS));
 		};
-			fetchProject();
+		fetchProject();
 	}, [projectid]);
 
 	const handleViewPhotoButton = (event, idx) => {
@@ -54,9 +60,11 @@ function PhotoReview() {
 		return <div>No photos found for this project</div>;
 	}
 
-	console.log(photoPages);
 	return (
-		<Box data-testid='photo-review-box' sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+		<Box
+			data-testid="photo-review-box"
+			sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}
+		>
 			<Typography variant="h1">Inspection Photo Review</Typography>
 			<Typography>Project ID: {projectid}</Typography>
 			<Typography>Address: {projectData.address}</Typography>
@@ -70,22 +78,22 @@ function PhotoReview() {
 				></img>
 			</Card>
 			<Box sx={{ display: 'flex', flexDirection: 'row', margin: 'auto' }}>
-				{	
-					photoPage > 1 &&
-					<IconButton 
+				{photoPage > 1 && (
+					<IconButton
 						size="large"
 						onClick={() => {
 							setPhotoPage(photoPage - 1);
 						}}
 					>
-						<ArrowLeftRoundedIcon fontSize="large"/>
+						<ArrowLeftRoundedIcon fontSize="large" />
 					</IconButton>
-				}
+				)}
 				{projectData.imageUrls
 					.slice((photoPage - 1) * MAX_PHOTOS, photoPage * MAX_PHOTOS)
 					.map((url, idx) => {
 						return (
 							<Card
+								data-testid={`photo-review-thumbnail-${(photoPage - 1) * MAX_PHOTOS + idx}`}
 								key={idx}
 								sx={{
 									m: 2,
@@ -105,26 +113,27 @@ function PhotoReview() {
 							</Card>
 						);
 					})}
-				{	photoPage < photoPages &&
-					<IconButton size="large"
-					onClick={() => {
-						setPhotoPage(photoPage + 1);
-					}}
-				>
-					<ArrowRightRoundedIcon fontSize="large"/>
-				</IconButton>
-				}
+				{photoPage < photoPages && (
+					<IconButton
+						data-testid="photo-review-next-page-button"
+						size="large"
+						onClick={() => {
+							setPhotoPage(photoPage + 1);
+						}}
+					>
+						<ArrowRightRoundedIcon fontSize="large" />
+					</IconButton>
+				)}
 			</Box>
 			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
 				<FormControl>
 					<TextField
-						label='Estimated Cost'
+						label="Estimated Cost"
 						type="number"
-						InputProps={{ inputProps: { min: 0 }}}
+						InputProps={{ inputProps: { min: 0 } }}
 						variant="filled"
 						required
-					>
-					</TextField>
+					></TextField>
 					<TextField
 						label="Estimated Completion Date"
 						variant="filled"
