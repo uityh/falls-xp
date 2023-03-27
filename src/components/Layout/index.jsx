@@ -1,11 +1,15 @@
+import { Container } from '@mui/material';
 import React from 'react';
-// we can use this to insert navbar and footer
+import { BrowserRouter as Router } from 'react-router-dom';
+import Navbar from './Navbar';
+
 function Layout({ children }) {
 	return (
-	<div>
-		{children}
-	</div>
-	)
+		<Router>
+			<Navbar />
+			<Container sx={{ py: 4 }}>{children}</Container>
+		</Router>
+	);
 }
 
 export default Layout;

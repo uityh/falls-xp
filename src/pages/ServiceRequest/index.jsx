@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import React from 'react';
-import { createServiceRequest } from 'utils/data/ServiceRequest';
 import { auth } from 'utils/firebase';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { createServiceRequest } from '../../utils/data/ServiceRequest';
 
 export default function ServiceRequest() {
 	const submitRequest = async (e) => {
@@ -16,8 +17,15 @@ export default function ServiceRequest() {
 				e.target.elements.description.value
 			);
 			document.getElementById('service-request-form').reset();
+			document.getElementById('error-field').innerHTML = '';
+			document.getElementById('success-field').innerHTML =
+				'<h2>Service Request successfully added!</h2>';
 		} catch (error) {
 			console.log(error.message);
+			document.getElementById(
+				'error-field'
+			).innerHTML = `<h2>Error: ${error.message}</h2>`;
+			document.getElementById('success-field').innerHTML = '';
 		}
 	};
 
@@ -79,6 +87,8 @@ export default function ServiceRequest() {
 					Submit Request
 				</Button>
 			</form>
+			<div id="error-field" className="error-field" />
+			<div id="success-field" className="success-field" />
 		</div>
 	);
 }
