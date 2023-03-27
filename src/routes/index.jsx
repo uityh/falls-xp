@@ -10,6 +10,7 @@ import SingleUser from 'pages/Users/SingleUser';
 import SignIn from 'pages/SignIn';
 // import SignUp from 'pages/SignUp';
 import Users from 'pages/Users';
+import Dashboard from 'pages/Dashboard';
 
 function Routes() {
 	return (
@@ -26,6 +27,7 @@ function Routes() {
 			</Route>
 			<Route path="/service-request" element={<ServiceRequest />} />
 			<Route path="/project-views" element={<ProjectViews />} />
+			<Route path="/dashboard" element={<Dashboard />} />
 			<Route path="/photo-review/:projectid" element={<PhotoReview />} />
 			<Route path="*" element={<NotFound />} />
 		</RRDRoutes>
