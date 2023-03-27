@@ -22,7 +22,6 @@ import '../../styles/photoreview.css';
 
 function PhotoReview() {
 	const { projectid } = useParams();
-
 	const [projectData, setProjectData] = useState({});
 	const [photoIdx, setPhotoIdx] = useState(0);
 	const [photoPage, setPhotoPage] = useState(1);
@@ -40,7 +39,6 @@ function PhotoReview() {
 	}, [projectid]);
 
 	const handleViewPhotoButton = (event, idx) => {
-		console.log(event, idx);
 		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
 	};
 
@@ -73,6 +71,7 @@ function PhotoReview() {
 					Photo {photoIdx + 1} of {projectData.imageUrls.length}
 				</Typography>
 				<img
+					data-testid="photo-review-large"
 					className="review-photo-large"
 					src={projectData.imageUrls[photoIdx]}
 				></img>
@@ -80,6 +79,7 @@ function PhotoReview() {
 			<Box sx={{ display: 'flex', flexDirection: 'row', margin: 'auto' }}>
 				{photoPage > 1 && (
 					<IconButton
+						data-testid="photo-review-previous-page-button"
 						size="large"
 						onClick={() => {
 							setPhotoPage(photoPage - 1);
@@ -104,6 +104,7 @@ function PhotoReview() {
 							>
 								<img className="review-photo-thumbnail" src={url}></img>
 								<Button
+									data-testid={`photo-review-view-button-${(photoPage - 1) * MAX_PHOTOS + idx}`}
 									onClick={(event) => handleViewPhotoButton(event, idx)}
 									variant="contained"
 									sx={{ maxWidth: '50%', margin: 'auto' }}

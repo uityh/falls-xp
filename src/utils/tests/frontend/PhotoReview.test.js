@@ -4,6 +4,8 @@ import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 
+import { Route, MemoryRouter } from 'react-router-dom';
+
 import PhotoReview from 'pages/PhotoReview';
 import { getProjectByProjectId } from 'utils/data/projects';
 
@@ -16,7 +18,7 @@ describe('PhotoReview', () => {
 	});
 });
 
-jest.mock('utils/data/projects');
+
 
 const mockProject = {
 	id: 'F9ieqoKKXEmLOik946Nb',
@@ -39,6 +41,15 @@ const mockProject = {
 	],
 };
 
+jest.mock('utils/data/projects');
+
+jest.mock('react-router-dom', () => ({
+	...jest.requireActual('react-router-dom'),
+	useParams: () => ({
+		projectid: mockProject.id,
+	})
+}));
+
 describe('PhotoReview component', () => {
 	beforeEach(() => {
 		getProjectByProjectId.mockResolvedValue(mockProject);
@@ -48,21 +59,23 @@ describe('PhotoReview component', () => {
 		jest.resetAllMocks();
 	});
 
-	it('Renders with the correct data', async () => {
-		const { container } = render(<PhotoReview />);
+	it('Renders the correct project data', async () => {
+		const { container } = render(<PhotoReview/>);
 		await act(async () => {
 			expect(getProjectByProjectId).toHaveBeenCalledTimes(1);
 		});
 		expect(screen.getByTestId('photo-review-box')).toBeInTheDocument();
+		expect(screen.getByText("Inspection Photo Review")).toBeInTheDocument();
+		expect(screen.getByText(`Project ID: ${mockProject.id}`)).toBeInTheDocument();
+		expect(screen.getByText(`Address: ${mockProject.address}`)).toBeInTheDocument();
+		expect(screen.getByText(`Photo 1 of ${mockProject.imageUrls.length}`)).toBeInTheDocument();
 		expect(screen.getByTestId('photo-review-thumbnail-0')).toBeInTheDocument();
 		expect(screen.getByTestId('photo-review-thumbnail-1')).toBeInTheDocument();
 		expect(screen.getByTestId('photo-review-thumbnail-2')).toBeInTheDocument();
 		expect(screen.getByTestId('photo-review-thumbnail-3')).toBeInTheDocument();
-
-
 	});
 
-	it('Renders the next page of images when the right arrow is clicked', async () => {
+	it('Renders the correct images when the right and left arrows are clicked', async () => {
 		const { container } = render(<PhotoReview />);
 		await act(async () => {
 			expect(getProjectByProjectId).toHaveBeenCalledTimes(1);
@@ -73,10 +86,28 @@ describe('PhotoReview component', () => {
 		});
 		expect(screen.getByTestId('photo-review-thumbnail-4')).toBeInTheDocument();
 		expect(screen.getByTestId('photo-review-thumbnail-5')).toBeInTheDocument();
-
-
+		await act(async () => {
+			userEvent.click(screen.getByTestId('photo-review-previous-page-button'));
+		});
+		expect(screen.getByTestId('photo-review-thumbnail-0')).toBeInTheDocument();
+		expect(screen.getByTestId('photo-review-thumbnail-1')).toBeInTheDocument();
+		expect(screen.getByTestId('photo-review-thumbnail-2')).toBeInTheDocument();
+		expect(screen.getByTestId('photo-review-thumbnail-3')).toBeInTheDocument();
 	});
 
+	it('Renders the correct images when the thumbnail view buttons are clicked', async () => {
+		const testIdx = 1;
+		const { container } = render(<PhotoReview />);
+		await act(async () => {
+			expect(getProjectByProjectId).toHaveBeenCalledTimes(1);
+		});
+
+		await act(async () => {
+			userEvent.click(screen.getByTestId(`photo-review-view-button-${testIdx}`));
+		});
+		expect(screen.getByTestId('photo-review-large')).toHaveAttribute('src', mockProject.imageUrls[testIdx]);
+
+	});
 
 });
 
