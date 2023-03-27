@@ -15,7 +15,18 @@ import {
 } from 'firebase/auth';
 import { auth, db } from 'utils/firebase';
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (testdb) => {
+	if (testdb) {
+		const usersCollection = await getDocs(collection(testdb, 'users'));
+		const result = [];
+		usersCollection.forEach((userDoc) => {
+			result.push({
+				id: userDoc.id,
+				...userDoc.data(),
+			});
+		});
+		return result;
+	}
 	const usersCollection = await getDocs(collection(db, 'users'));
 	const result = [];
 	usersCollection.forEach((userDoc) => {
@@ -27,15 +38,39 @@ export const getAllUsers = async () => {
 	return result;
 };
 
-export const getUserById = async (id) => {
+export const getUserById = async (id, testdb) => {
+	if (testdb) {
+		const userDoc = await getDoc(doc(testdb, 'users', id));
+		if (!userDoc) throw new Error('No user found with the given Id');
+		return {
+			id,
+			...userDoc.data(),
+		};
+	}
 	const userDoc = await getDoc(doc(db, 'users', id));
+	if (!userDoc) throw new Error('No user found with the given Id');
 	return {
 		id,
 		...userDoc.data(),
 	};
 };
 
-export const getUserByEmail = async (email) => {
+export const getUserByEmail = async (email, testdb) => {
+	if (testdb) {
+		const userDoc = await getDocs(
+			query(collection(testdb, 'users'), where('email', '==', email))
+		);
+		const result = [];
+		userDoc.forEach((uDoc) => {
+			result.push({
+				id: uDoc.id,
+				...uDoc.data(),
+			});
+		});
+		if (result.length === 0)
+			throw new Error('No user with provided email found');
+		return result[0];
+	}
 	const userDoc = await getDocs(
 		query(collection(db, 'users'), where('email', '==', email))
 	);
@@ -50,7 +85,16 @@ export const getUserByEmail = async (email) => {
 	return result[0];
 };
 
-const checkEmailExists = async (email) => {
+const checkEmailExists = async (email, testdb) => {
+	if (testdb) {
+		try {
+			const user = await getUserByEmail(email, testdb);
+			if (user) return true;
+		} catch (e) {
+			return false;
+		}
+		return false;
+	}
 	try {
 		const user = await getUserByEmail(email);
 		if (user) return true;
