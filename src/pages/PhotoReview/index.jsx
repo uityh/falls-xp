@@ -27,6 +27,9 @@ function PhotoReview() {
 	const [photoPage, setPhotoPage] = useState(1);
 	const [photoPages, setPhotoPages] = useState(1);
 
+	const [costInput, setCostInput] = useState(1);
+	const [dateInput, setDateInput] = useState(new Date());
+
 	const MAX_PHOTOS = 4;
 
 	useEffect(() => {
@@ -129,6 +132,7 @@ function PhotoReview() {
 			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
 				<FormControl>
 					<TextField
+						onChange={(e) => { setCostInput(e.target.value) }}
 						label="Estimated Cost"
 						type="number"
 						InputProps={{ inputProps: { min: 1 } }}
@@ -136,6 +140,7 @@ function PhotoReview() {
 						required
 					></TextField>
 					<TextField
+						onChange={(e) => { setDateInput(e.target.value) }}
 						label="Estimated Completion Date"
 						variant="filled"
 						type="date"
