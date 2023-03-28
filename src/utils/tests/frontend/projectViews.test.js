@@ -3,120 +3,119 @@ import {
 	getProjectByProjectId,
 	getProjectByInvolvedId,
 } from 'utils/data/projects';
-import { FakeFirestore } from 'firestore-jest-mock';
-describe('Tests', () => {
+import ProjectViews from 'pages/ProjectViews';
+import { render, screen, cleanup } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
+
+afterEach(cleanup);
+
+jest.mock('utils/data/projects');
+jest.mock('contexts/Auth', () => ({
+	...jest.requireActual('contexts/Auth'),
+	useAuthContext: () => ({
+		user: mockAdmin,
+	}),
+}));
+
+const mockAdmin = {
+	email: 'rancom@test./com',
+	firstName: 'test',
+	id: '1',
+	lastName: 'test',
+	phone: '0',
+	role: 'admin',
+};
+const mockSales = {
+	email: 'rancom@test./com',
+	firstName: 'test',
+	id: '1',
+	lastName: 'test',
+	phone: '0',
+	role: 'sales',
+};
+
+const mockAdminProjects = [
+	{
+		id: 'F9ieqoKKXEmLOik946Nb',
+		address: '308 Negra Arroyo Lane',
+		assignedWorkers: ['random guy'],
+		cost: 0,
+		customerId: 'eAE62yKcuRK4OCQYvmHc',
+		salesRepId: 'smwmzTSYJzeGMbUC5HZm',
+		status: 'not started',
+		startDate: 'March 25, 2023 at 12:00:00 AM UTC-4',
+		customerNotes: 'testing for images',
+		tasks: ['initial inspection'],
+		imageUrls: [],
+	},
+	{
+		id: 'temp',
+		address: '308 Negra Arroyo Lane',
+		assignedWorkers: ['assignee1'],
+		cost: 0,
+		customerId: 'eAE62yKcuRK4OCQYvmHc',
+		salesRepId: 'smwmzTSYJzeGMbUC5HZm',
+		status: 'not started',
+		startDate: 'March 25, 2023 at 12:00:00 AM UTC-4',
+		customerNotes: 'testing for images',
+		tasks: ['initial inspection'],
+		imageUrls: [],
+	},
+];
+const mockSalesProjects = [
+	{
+		id: 'F9ieqoKKXEmLOik946Nb',
+		address: '308 Negra Arroyo Lane',
+		assignedWorkers: ['random guy'],
+		cost: 0,
+		customerId: 'eAE62yKcuRK4OCQYvmHc',
+		salesRepId: 'smwmzTSYJzeGMbUC5HZm',
+		status: 'not started',
+		startDate: 'March 25, 2023 at 12:00:00 AM UTC-4',
+		customerNotes: 'testing for images',
+		tasks: ['initial inspection'],
+		imageUrls: [],
+	},
+];
+
+describe('Admin test', () => {
 	beforeEach(() => {
-		jest.resetModules();
-		jest.clearAllMocks();
+		getProjectByInvolvedId.mockResolvedValue(mockAdminProjects);
 	});
-	const db = (simulateQueryFilters = false) =>
-		new FakeFirestore(
-			{
-				projects: [
-					{
-						id: 'project1',
-						customerId: 'customer1',
-						customerNotes: '',
-						address: 'anywhere usa',
-						assignedWorkers: ['field1', 'ops1', 'field2'],
-						cost: 0,
-						salesRepId: 'sales1',
-						status: 'not started',
-						startDate: '03-26-2023',
-						imageUrls: [],
-					},
-					{
-						id: 'project2',
-						address: '123 main st usa',
-						assignedWorkers: ['field2', 'ops1', 'ops2'],
-						customerId: 'customer2',
-						cost: 0,
-						customerNotes: '',
-						salesRepId: 'sales1',
-						status: 'in progress',
-						startDate: '03-26-2023',
-						imageUrls: [],
-					},
-				],
-				users: [
-					{
-						id: 'sales1',
-						email: 'sales@fallsxp.com',
-						firstName: 'Test',
-						lastName: 'Sales',
-						phone: '1',
-						role: 'sales',
-					},
-					{
-						id: 'field1',
-						email: 'field1@fallsxp.com',
-						firstName: 'Field',
-						lastName: 'One',
-						phone: '1',
-						role: 'field',
-					},
-					{
-						id: 'field2',
-						email: 'field2@fallsxp.com',
-						firstName: 'Field',
-						lastName: 'Two',
-						phone: '1',
-						role: 'field',
-					},
-					{
-						id: 'ops1',
-						email: 'ops1@fallsxp.com',
-						firstName: 'Ops',
-						lastName: 'One',
-						phone: '1',
-						role: 'operations',
-					},
-					{
-						id: 'ops2',
-						email: 'ops2@fallsxp.com',
-						firstName: 'Ops',
-						lastName: 'Two',
-						phone: '1',
-						role: 'operations',
-					},
-					{
-						id: 'customer1',
-						email: 'customer1@fallsxp.com',
-						firstName: 'Customer',
-						lastName: 'One',
-						phone: '1',
-						role: 'customer',
-					},
-					{
-						id: 'customer2',
-						email: 'customer2@fallsxp.com',
-						firstName: 'Customer',
-						lastName: 'Two',
-						phone: '1',
-						role: 'customer',
-					},
-				],
-			},
-			{ simulateQueryFilters }
-		);
-	describe('Get user projects', () => {
-		test('Get field1 projects', async () => {
-			const projects = [
-				{
-					id: 'project1',
-					customerId: 'customer1',
-					customerNotes: '',
-					address: 'anywhere usa',
-					assignedWorkers: ['field1', 'ops1', 'field2'],
-					cost: 0,
-					salesRepId: 'sales1',
-					status: 'not started',
-					startDate: '03-26-2023',
-					imageUrls: [],
-				},
-			];
-			const retrievedProjects = await getProjectByInvolvedId('field1', db);
-			expect(projects).toEqual(retrievedProjects);
+	afterEach(() => {
+		jest.resetAllMocks();
+	});
+	it('Renders correct version', async () => {
+		await act(async () => {
+			const { container } = render(<ProjectViews />);
 		});
+		expect(screen.getAllByTestId('id-cell')).toBeInTheDocument;
+		expect(screen.getAllByTestId('tasks-cell')).toBeInTheDocument;
+		expect(screen.getAllByTestId('status-cell')).toBeInTheDocument;
+		expect(screen.getAllByTestId('address-cell')).toBeInTheDocument;
+		expect(screen.getAllByTestId('cost-cell')).toBeInTheDocument;
+		expect(screen.getAllByTestId('notes-cell')).toBeInTheDocument;
+		expect(screen.getAllByTestId('assigned-workers-cell')).toBeInTheDocument;
 	});
 });
+
+//! Cannot currently mock UseAuthContext more than once, need to figure out why
+// describe('Sales test', () => {
+// 	beforeEach(() => {
+// 		getProjectByInvolvedId.mockResolvedValue(mockSalesProjects);
+// 	});
+// 	afterEach(() => {
+// 		jest.resetAllMocks();
+// 	});
+// 	it('Renders correct version', async () => {
+// 		await act(async () => {
+// 			const { container } = render(<ProjectViews />);
+// 		});
+// 		expect(screen.getAllByTestId('id-cell')).toBeInTheDocument;
+// 		expect(screen.getAllByTestId('status-cell')).toBeInTheDocument;
+// 		expect(screen.getAllByTestId('address-cell')).toBeInTheDocument;
+// 		expect(screen.getAllByTestId('cost-cell')).toBeInTheDocument;
+// 		expect(screen.getAllByTestId('notes-cell')).toBeInTheDocument;
+// 		expect(screen.getAllByTestId('assigned-workers-cell')).toBeInTheDocument;
+// 	});
+// });

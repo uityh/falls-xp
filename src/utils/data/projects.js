@@ -71,12 +71,12 @@ export const getProjectByInvolvedId = async (id, testdb) => {
 				where('salesRepId', '==', id)
 			);
 		} else {
-			console.log('calling testdb function');
 			foundProjects = testdb()
 				.collection('projects')
 				.where('assignedWorkers', 'array-contains', id);
 		}
-		const projectsDoc = await getDocs(foundProjects);
+		console.log(foundProjects);
+		const projectsDoc = await foundProjects.get();
 		if (!projectsDoc) throw new Error('No projects found for the current user');
 		projectsDoc.forEach((projectDoc) => {
 			result.push({

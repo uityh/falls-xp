@@ -21,10 +21,8 @@ export default function ProjectViews() {
 	const [involvedProjects, setInvolvedProjects] = useState([]);
 	const getProjects = useCallback(async () => {
 		if (user !== null) {
-			console.log(user.id);
 			const userProjects = await getProjectByInvolvedId(user.id);
 			setInvolvedProjects(userProjects);
-			console.log(userProjects);
 		}
 	}, [user]);
 	useEffect(() => {
@@ -69,15 +67,25 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<TableCell>{project.id}</TableCell>
-									<TableCell>{project.tasks.join(', ')}</TableCell>
-									<TableCell>{project.status}</TableCell>
-									<TableCell>{project.address}</TableCell>
-									<TableCell>
+									<TableCell data-testid="id-cell">{project.id}</TableCell>
+									<TableCell data-testid="tasks-cell">
+										{project.tasks.join(', ')}
+									</TableCell>
+									<TableCell data-testid="status-cell">
+										{project.status}
+									</TableCell>
+									<TableCell data-testid="address-cell">
+										{project.address}
+									</TableCell>
+									<TableCell data-testid="cost-cell">
 										{project.cost === 0 ? 'TBD' : project.cost}
 									</TableCell>
-									<TableCell>{project.customerNotes}</TableCell>
-									<TableCell>{project.assignedWorkers.join(', ')}</TableCell>
+									<TableCell data-testid="notes-cell">
+										{project.customerNotes}
+									</TableCell>
+									<TableCell data-testid="assigned-workers-cell">
+										{project.assignedWorkers.join(', ')}
+									</TableCell>
 								</TableRow>
 							))}
 						</TableBody>
@@ -174,13 +182,19 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<TableCell>{project.id}</TableCell>
-									<TableCell>{project.status}</TableCell>
-									<TableCell>{project.address}</TableCell>
-									<TableCell>
+									<TableCell data-testid="id-cell">{project.id}</TableCell>
+									<TableCell data-testid="status-cell">
+										{project.status}
+									</TableCell>
+									<TableCell data-testid="address-cell">
+										{project.address}
+									</TableCell>
+									<TableCell data-testid="cost-cell">
 										{project.cost === 0 ? 'TBD' : project.cost}
 									</TableCell>
-									<TableCell>{project.customerNotes}</TableCell>
+									<TableCell data-testid="notes-cell">
+										{project.customerNotes}
+									</TableCell>
 								</TableRow>
 							))}
 						</TableBody>
