@@ -40,7 +40,7 @@ export const getAllUsers = async (testdb) => {
 
 export const getUserById = async (id, testdb) => {
 	if (testdb) {
-		const userDoc = await getDoc(doc(testdb, 'users', id));
+		const userDoc = await testdb().collection('users').doc(id).get();
 		if (!userDoc) throw new Error('No user found with the given Id');
 		return {
 			id,
@@ -57,9 +57,9 @@ export const getUserById = async (id, testdb) => {
 
 export const getUserByEmail = async (email, testdb) => {
 	if (testdb) {
-		const userDoc = await getDocs(
-			query(collection(testdb, 'users'), where('email', '==', email))
-		);
+		const userDoc = await testdb()
+			.collection('users')
+			.where('email', '==', email);
 		const result = [];
 		userDoc.forEach((uDoc) => {
 			result.push({

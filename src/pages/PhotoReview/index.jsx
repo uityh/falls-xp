@@ -3,7 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Box, Typography, Card, Button, IconButton, FormControl, TextField } from '@mui/material';
+import {
+	Box,
+	Typography,
+	Card,
+	Button,
+	IconButton,
+	FormControl,
+	TextField
+} from '@mui/material';
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
@@ -14,17 +22,19 @@ import '../../styles/photoreview.css';
 
 function PhotoReview() {
 	const { projectid } = useParams();
-
 	const [projectData, setProjectData] = useState({});
 	const [photoIdx, setPhotoIdx] = useState(0);
 	const [photoPage, setPhotoPage] = useState(1);
 	const [photoPages, setPhotoPages] = useState(1);
 
+	const [costInput, setCostInput] = useState(1);
+	const [dateInput, setDateInput] = useState(new Date());
+
 	const MAX_PHOTOS = 4;
 
 	useEffect(() => {
 		const fetchProject = async () => {
-			const project = await getProjectByProjectId(projectid);
+			const project = await getProjectByProjectId('F9ieqoKKXEmLOik946Nb');
 			setProjectData(project);
 			setPhotoPages(Math.ceil(project.imageUrls.length / MAX_PHOTOS));
 		};
@@ -32,7 +42,6 @@ function PhotoReview() {
 	}, [projectid]);
 
 	const handleViewPhotoButton = (event, idx) => {
-		console.log(event, idx);
 		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
 	};
 
@@ -52,9 +61,11 @@ function PhotoReview() {
 		return <div>No photos found for this project</div>;
 	}
 
-	console.log(photoPages);
 	return (
-		<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+		<Box
+			data-testid="photo-review-box"
+			sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}
+		>
 			<Typography variant="h1">Inspection Photo Review</Typography>
 			<Typography>Project ID: {projectid}</Typography>
 			<Typography>Address: {projectData.address}</Typography>
@@ -63,27 +74,29 @@ function PhotoReview() {
 					Photo {photoIdx + 1} of {projectData.imageUrls.length}
 				</Typography>
 				<img
+					data-testid="photo-review-large"
 					className="review-photo-large"
 					src={projectData.imageUrls[photoIdx]}
 				></img>
 			</Card>
 			<Box sx={{ display: 'flex', flexDirection: 'row', margin: 'auto' }}>
-				{	
-					photoPage > 1 &&
-					<IconButton 
+				{photoPage > 1 && (
+					<IconButton
+						data-testid="photo-review-previous-page-button"
 						size="large"
 						onClick={() => {
 							setPhotoPage(photoPage - 1);
 						}}
 					>
-						<ArrowLeftRoundedIcon fontSize="large"/>
+						<ArrowLeftRoundedIcon fontSize="large" />
 					</IconButton>
-				}
+				)}
 				{projectData.imageUrls
 					.slice((photoPage - 1) * MAX_PHOTOS, photoPage * MAX_PHOTOS)
 					.map((url, idx) => {
 						return (
 							<Card
+								data-testid={`photo-review-thumbnail-${(photoPage - 1) * MAX_PHOTOS + idx}`}
 								key={idx}
 								sx={{
 									m: 2,
@@ -94,6 +107,7 @@ function PhotoReview() {
 							>
 								<img className="review-photo-thumbnail" src={url}></img>
 								<Button
+									data-testid={`photo-review-view-button-${(photoPage - 1) * MAX_PHOTOS + idx}`}
 									onClick={(event) => handleViewPhotoButton(event, idx)}
 									variant="contained"
 									sx={{ maxWidth: '50%', margin: 'auto' }}
@@ -103,27 +117,30 @@ function PhotoReview() {
 							</Card>
 						);
 					})}
-				{	photoPage < photoPages &&
-					<IconButton size="large"
-					onClick={() => {
-						setPhotoPage(photoPage + 1);
-					}}
-				>
-					<ArrowRightRoundedIcon fontSize="large"/>
-				</IconButton>
-				}
+				{photoPage < photoPages && (
+					<IconButton
+						data-testid="photo-review-next-page-button"
+						size="large"
+						onClick={() => {
+							setPhotoPage(photoPage + 1);
+						}}
+					>
+						<ArrowRightRoundedIcon fontSize="large" />
+					</IconButton>
+				)}
 			</Box>
 			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
 				<FormControl>
 					<TextField
-						label='Estimated Cost'
+						onChange={(e) => { setCostInput(e.target.value) }}
+						label="Estimated Cost"
 						type="number"
-						InputProps={{ inputProps: { min: 0 }}}
+						InputProps={{ inputProps: { min: 1 } }}
 						variant="filled"
 						required
-					>
-					</TextField>
+					></TextField>
 					<TextField
+						onChange={(e) => { setDateInput(e.target.value) }}
 						label="Estimated Completion Date"
 						variant="filled"
 						type="date"
