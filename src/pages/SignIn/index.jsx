@@ -13,7 +13,6 @@ import { Field, Form, Formik } from 'formik';
 import { TextInput } from 'components/FormikMuiFields';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { authenticateUser } from 'utils/data/users';
-import { useAuthContext } from 'contexts/Auth';
 import { useNavigate } from 'react-router-dom';
 
 const schema = Yup.object().shape({
@@ -31,7 +30,6 @@ const schema = Yup.object().shape({
 
 export default function SignIn() {
 	const [showPassword, setShowPassword] = useState(false);
-	const { setUser } = useAuthContext();
 	const navigate = useNavigate();
 
 	const handleClickShowPassword = () => {
@@ -56,8 +54,7 @@ export default function SignIn() {
 				onSubmit={async ({ email, password }, { setSubmitting }) => {
 					try {
 						setSubmitting(true);
-						const user = await authenticateUser(email, password);
-						setUser(user);
+						await authenticateUser(email, password);
 						navigate('/');
 					} catch (e) {
 						// eslint-disable-next-line
