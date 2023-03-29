@@ -31,7 +31,7 @@ describe('Queries', () => {
 
 	describe('Get image urls', () => {
 		test('get image urls returns the correct image urls', async () => {
-			const imageUrls = ['url1', 'url3'];
+			const imageUrls = ['url1', 'url2'];
 			const projectId = 'project1';
 
 			const retrievedImageUrls = await getImageUrls(projectId, db);
