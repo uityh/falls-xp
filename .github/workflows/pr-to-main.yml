@@ -2,7 +2,6 @@ name: Run tests
 env:
   CI: true
 'on':
-  push: null
   pull_request:
     branches:
       - main
@@ -21,5 +20,4 @@ jobs:
           cache-dependency-path: ./package-lock.json
       - run: npm install --package-lock-only
       - run: npm ci
-      - run: npm run build --if-present
       - run: npm run test --if-present
