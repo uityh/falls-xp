@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
-/* eslint-disable no-console */
+/* eslint-disable */
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from 'utils/firebase';
 import { checkString, checkDateString } from 'utils/helpers/validation';
@@ -21,6 +21,7 @@ export const createServiceRequest = async (
 		console.log('Error from backend');
 		throw new Error('That is not a real customer!');
 	}
+
 	salesRepId = checkString(salesRepId, 'salesRepId');
 	address = checkString(address, 'address');
 	startDate = checkDateString(startDate, 'startDate');
@@ -28,7 +29,14 @@ export const createServiceRequest = async (
 		customerNotes = checkString(customerNotes, 'customerNotes');
 	}
 
-	startDate.setHours(0, 0, 0);
+	const task = {
+		taskName: 'initial inspection',
+		startDate: startDate,
+		// endDate: undefined,
+		status: 'in progress',
+		team: 'onsite',
+		// employeeId: salesRepId,
+	};
 
 	return await addDoc(collection(db, 'projects'), {
 		customerId: customerId,
@@ -37,7 +45,7 @@ export const createServiceRequest = async (
 		address: address,
 		assignedWorkers: [],
 		status: 'not started',
-		tasks: ['initial inspection'],
+		tasks: [task],
 		cost: 0,
 		customerNotes: customerNotes,
 		imageUrls: [],
