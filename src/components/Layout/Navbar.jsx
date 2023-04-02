@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { AppBar, Container, Toolbar, Box, Stack, Button } from '@mui/material';
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
