@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable */
 import {
 	collection,
 	getDocs,
@@ -133,6 +134,55 @@ export const addImageUrl = async (projectId, imageUrl) => {
 		imageUrls: arrayUnion(imageUrl),
 	});
 	return getImageUrls(projectId);
+};
+
+export const markTaskAsComplete = async (projectId, taskName) => { 
+
+	const foundProject = await getProjectByProjectId(projectId);
+	const idx = foundProject.tasks.findIndex((task) => task.name === taskName);
+	foundProject.tasks[idx].status = 'complete';
+	foundProject.tasks[idx].endDate = today;
+
+	await updateDoc(doc(db, 'projects', projectId), {
+		tasks: foundProject.tasks,
+	});
+
+	return foundProject.tasks;
+}
+
+export const addTaskToProject = async (projectId, taskName, completePreviousTask = false) => { 
+
+	const taskTeamRelations = { 
+		"initial inspection": "onsite",
+		"pending review": "operations",
+		"customer confirmation": "sales",
+		"installation": "onsite"
+	}
+
+	const foundProject = await getProjectByProjectId(projectId);
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+	const task = {
+		name: taskName,
+		status: 'in progress',
+		startDate: today,
+		endDate: null,
+		team: taskTeamRelations[taskName],
+		employeeId: null
+	}
+	foundProject.tasks.push(task);
+
+	if (foundProject.tasks.length > 1 && completePreviousTask) {
+		const idx = foundProject.tasks.findIndex((task) => task.name === taskName);
+		foundProject.tasks[idx - 1].status = 'complete';
+		foundProject.tasks[idx - 1].endDate = today;
+	}
+
+	await updateDoc(doc(db, 'projects', projectId), {
+		tasks: foundProject.tasks,
+	});
+
+	return foundProject.tasks;
 };
 
 // Create service request is the functionality to be used for creating a project

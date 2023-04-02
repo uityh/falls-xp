@@ -32,10 +32,10 @@ export const createServiceRequest = async (
 	const task = {
 		taskName: 'initial inspection',
 		startDate: startDate,
-		// endDate: undefined,
+		endDate: null,
 		status: 'in progress',
 		team: 'onsite',
-		// employeeId: salesRepId,
+		employeeId: null,
 	};
 
 	return await addDoc(collection(db, 'projects'), {
