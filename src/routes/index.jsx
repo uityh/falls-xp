@@ -1,7 +1,11 @@
 import React from 'react';
-import { Routes as RRDRoutes, Route } from 'react-router-dom';
+import {
+	Navigate,
+	Routes as RRDRoutes,
+	Route,
+	useLocation,
+} from 'react-router-dom';
 import NotFound from 'pages/404';
-import Home from 'pages/Home';
 import CustomerLeads from 'pages/CustomerLeads';
 import ProjectViews from 'pages/ProjectViews';
 import PhotoReview from 'pages/PhotoReview';
@@ -12,11 +16,25 @@ import SignIn from 'pages/SignIn';
 import Users from 'pages/Users';
 import ProjectDashboard from 'pages/ProjectDashboard';
 import Dashboard from 'pages/Dashboard';
+import { useAuthContext } from 'contexts/Auth';
 
 function Routes() {
+	const { pathname } = useLocation();
+	const { user } = useAuthContext();
+
+	const isLoggedIn = Boolean(user);
+
+	if (
+		(isLoggedIn && pathname === '/sign-in') ||
+		(pathname.includes('/users') && user?.role !== 'admin')
+	)
+		return <Navigate to="/dashboard" />;
+
+	if (!isLoggedIn && pathname !== '/sign-in') return <Navigate to="/sign-in" />;
+
 	return (
 		<RRDRoutes>
-			<Route index element={<Home />} />
+			<Route index element={<Navigate to="/dashboard" />} />
 			<Route path="/customer-leads" element={<CustomerLeads />} />
 			<Route path="/sign-in" element={<SignIn />} />
 			{/**

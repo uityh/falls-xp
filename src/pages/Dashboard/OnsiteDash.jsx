@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
 	Box,
+	Divider,
 	Table,
 	TableBody,
 	TableCell,
@@ -31,13 +32,11 @@ export default function OnsiteDash(user) {
 	];
 	return (
 		<Box>
-			<Typography>Dashboard | Onsite Team</Typography>
-			<Typography>
-				Current User: {user?.firstName ?? 'Not Logged in'}
+			<Typography variant="h4" component="h1">
+				Onsite Team Dashboard
 			</Typography>
-			<Typography> Role: {user?.role}</Typography>
-
-			<Table sx={{ p: 2 }}>
+			<Divider sx={{ mb: 5, mt: 1 }} />
+			<Table>
 				<TableHead>
 					<TableRow>
 						{headers.map((headCell) => (

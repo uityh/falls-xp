@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
 	Box,
+	Divider,
 	Table,
 	TableBody,
 	TableCell,
@@ -31,13 +32,11 @@ export default function AdminDash(user) {
 	];
 	return (
 		<Box>
-			<Typography>Dashboard | Admins</Typography>
-			<Typography>
-				Current User: {user?.firstName ?? 'Not Logged in'}
+			<Typography variant="h4" component="h1">
+				Admin Dashboard
 			</Typography>
-			<Typography> Role: {user?.role}</Typography>
-
-			<Table sx={{ p: 2 }}>
+			<Divider sx={{ mb: 5, mt: 1 }} />
+			<Table>
 				<TableHead>
 					<TableRow>
 						{headers.map((headCell) => (
@@ -57,10 +56,10 @@ export default function AdminDash(user) {
 							{/* Date below isn't working */}
 							{/* <TableCell>{object.startDate.toDate()}</TableCell> */}
 							<TableCell>{object.customerNotes}</TableCell>
-							<TableCell>{object.tasks.join(', ')}</TableCell>
-							<TableCell>{object.assignedWorkers.join(', ')}</TableCell>
+							<TableCell>{object.tasks?.join(', ')}</TableCell>
+							<TableCell>{object.assignedWorkers?.join(', ')}</TableCell>
 							<TableCell>
-								{object.assignedWorkers.includes(user?.id) ? 'Yes' : 'No'}
+								{object.assignedWorkers?.includes(user?.id) ? 'Yes' : 'No'}
 							</TableCell>
 						</TableRow>
 					))}

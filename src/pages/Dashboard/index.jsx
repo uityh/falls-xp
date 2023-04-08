@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
 import { useAuthContext } from 'contexts/Auth';
+import { Navigate } from 'react-router-dom';
 import AdminDash from './AdminDash';
 import OnsiteDash from './OnsiteDash';
 import OperationsDash from './OperationsDash';
@@ -19,12 +19,7 @@ function Dashboard() {
 			return OnsiteDash(user);
 		}
 	}
-	return (
-		<Box>
-			<Typography>Dashboard</Typography>
-			<Typography>Not Logged In</Typography>
-		</Box>
-	);
+	return <Navigate to="/sign-in" />;
 }
 
 export default Dashboard;
