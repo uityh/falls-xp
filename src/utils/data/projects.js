@@ -8,6 +8,7 @@ import {
 	doc,
 	query,
 	where,
+	addDoc,
 } from 'firebase/firestore';
 import { db } from 'utils/firebase';
 import { getUserById } from 'utils/data/users';
@@ -133,6 +134,59 @@ export const addImageUrl = async (projectId, imageUrl) => {
 		imageUrls: arrayUnion(imageUrl),
 	});
 	return getImageUrls(projectId);
+};
+
+export const getProjectsByCustomerId = async (customerId, testdb) => {
+	if (testdb) {
+		const userDoc = await testdb()
+			.collection('users')
+			.where('customerId', '==', customerId);
+		const result = [];
+		userDoc.forEach((uDoc) => {
+			result.push({
+				id: uDoc.id,
+				...uDoc.data(),
+			});
+		});
+		return result;
+	}
+
+	const userDoc = await getDocs(
+		query(collection(db, 'projects'), where('customerId', '==', customerId))
+	);
+	const result = [];
+	userDoc.forEach((uDoc) => {
+		result.push({
+			id: uDoc.id,
+			...uDoc.data(),
+		});
+	});
+	return result;
+};
+
+export const createNewProject = async (customerId, address = '') => {
+	if (!customerId) {
+		throw new Error('A customer ID is required to create a new project');
+	}
+
+	const thisCustomer = await getUserById(customerId);
+	if (thisCustomer.role !== 'customer') {
+		console.log('Error from backend');
+		throw new Error('That is not a real customer!');
+	}
+
+	return addDoc(collection(db, 'projects'), {
+		customerId,
+		address,
+		salesRepId: '',
+		startDate: '',
+		assignedWorkers: [],
+		status: 'lead onboarded',
+		tasks: [],
+		cost: 0,
+		customerNotes: '',
+		imageUrls: [],
+	});
 };
 
 // Create service request is the functionality to be used for creating a project
