@@ -35,12 +35,13 @@ const paths = {
 };
 
 function Navbar() {
-	const { user } = useAuthContext();
+	const { user, refreshAuthState } = useAuthContext();
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const handleSignOut = async () => {
 		try {
 			await signOut(auth);
+			await refreshAuthState();
 		} catch (e) {
 			console.error(e);
 		}

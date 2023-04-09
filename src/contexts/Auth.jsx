@@ -1,6 +1,7 @@
 import { onAuthStateChanged } from 'firebase/auth';
 import React, {
 	createContext,
+	useCallback,
 	useContext,
 	useEffect,
 	useMemo,
@@ -18,29 +19,35 @@ export function useAuthContext() {
 export function AuthContextProvider({ children }) {
 	const [user, setUser] = useState(null);
 	const [appInitialized, setAppInitialized] = useState(false);
-	useEffect(() => {
-		onAuthStateChanged(auth, async (currUser) => {
-			try {
-				if (currUser) {
-					const currUserObj = await getUserByEmail(currUser.email);
-					setUser(currUserObj);
-				} else {
-					setUser(null);
-				}
-			} catch (e) {
-				console.error(e);
-			} finally {
-				setAppInitialized(true);
+	const refreshAuthState = useCallback(async () => {
+		try {
+			const currUser = auth.currentUser;
+			if (currUser) {
+				const currUserObj = await getUserByEmail(currUser.email);
+				setUser(currUserObj);
+			} else {
+				setUser(null);
 			}
-		});
+		} catch (e) {
+			console.error(e);
+		} finally {
+			setAppInitialized(true);
+		}
 	}, []);
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, async () => {
+			unsubscribe();
+			refreshAuthState();
+		});
+	}, [refreshAuthState]);
 
 	const contextValue = useMemo(
 		() => ({
 			user,
 			appInitialized,
+			refreshAuthState,
 		}),
-		[user, appInitialized]
+		[user, appInitialized, refreshAuthState]
 	);
 	return (
 		<AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

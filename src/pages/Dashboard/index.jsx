@@ -1,23 +1,30 @@
 import React from 'react';
 import { useAuthContext } from 'contexts/Auth';
 import { Navigate } from 'react-router-dom';
-import AdminDash from './AdminDash';
-import OnsiteDash from './OnsiteDash';
-import OperationsDash from './OperationsDash';
+import Dash from './Dash';
 
 function Dashboard() {
 	const { user } = useAuthContext();
 
 	if (user !== null) {
-		if (user.role === 'admin') {
-			return AdminDash(user);
+		let header = 'Dashboard';
+		switch (user.role) {
+			case 'admin':
+				header = 'Admin Dashboard';
+				break;
+			case 'onsite':
+				header = 'On-Site Team Dashboard';
+				break;
+			case 'operations':
+				header = 'Operations Team Dashboard';
+				break;
+			case 'sales':
+				header = 'Sales Team Dashboard';
+				break;
+			default:
+				break;
 		}
-		if (user.role === 'operations') {
-			return OperationsDash(user);
-		}
-		if (user.role === 'field') {
-			return OnsiteDash(user);
-		}
+		return <Dash user={user} header={header} />;
 	}
 	return <Navigate to="/sign-in" />;
 }

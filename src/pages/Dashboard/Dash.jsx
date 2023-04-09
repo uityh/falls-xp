@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { getAllProjects } from 'utils/data/projects';
 
-export default function AdminDash(user) {
+export default function AdminDash({ user, header }) {
 	const [projects, setProjects] = useState([]);
 	const getUsers = useCallback(async () => {
 		const allProjects = await getAllProjects();
@@ -33,7 +33,7 @@ export default function AdminDash(user) {
 	return (
 		<Box>
 			<Typography variant="h4" component="h1">
-				Admin Dashboard
+				{header}
 			</Typography>
 			<Divider sx={{ mb: 5, mt: 1 }} />
 			<Table>

@@ -189,4 +189,27 @@ export const createNewProject = async (customerId, address = '') => {
 	});
 };
 
+export const getProjectLeads = async () => {
+	const projectDoc = await getDocs(
+		query(collection(db, 'projects'), where('status', '==', 'lead onboarded'))
+	);
+	let result = [];
+	projectDoc.forEach((pDoc) => {
+		result.push({
+			id: pDoc.id,
+			...pDoc.data(),
+		});
+	});
+	result = await Promise.all(
+		result.map(async (p) => {
+			const customer = await getUserById(p.customerId);
+			return {
+				...p,
+				customer,
+			};
+		})
+	);
+	return result;
+};
+
 // Create service request is the functionality to be used for creating a project
