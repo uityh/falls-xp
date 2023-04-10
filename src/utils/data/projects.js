@@ -165,6 +165,20 @@ export const getProjectsByCustomerId = async (customerId, testdb) => {
 	return result;
 };
 
+export const getProjectsByStatus = async (status) => {
+	const projectsDoc = await getDocs(
+		query(collection(db, 'projects'), where('status', '==', status))
+	);
+	const result = [];
+	projectsDoc.forEach((pDoc) => {
+		result.push({
+			id: pDoc.id,
+			...pDoc.data(),
+		});
+	});
+	return result;
+};
+
 export const createNewProject = async (customerId, address = '') => {
 	if (!customerId) {
 		throw new Error('A customer ID is required to create a new project');

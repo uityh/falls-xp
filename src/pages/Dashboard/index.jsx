@@ -2,9 +2,12 @@ import React from 'react';
 import { useAuthContext } from 'contexts/Auth';
 import { Navigate } from 'react-router-dom';
 import Dash from './Dash';
+import OperationsDashboard from './OperationsDashboard';
 
 function Dashboard() {
 	const { user } = useAuthContext();
+
+	if (user?.role === 'operations') return <OperationsDashboard user={user} />;
 
 	if (user !== null) {
 		let header = 'Dashboard';
