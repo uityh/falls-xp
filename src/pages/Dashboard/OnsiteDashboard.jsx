@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, { useState, useEffect, useCallback } from 'react';
 import { getProjectsByStatus } from 'utils/data/projects';
 import {

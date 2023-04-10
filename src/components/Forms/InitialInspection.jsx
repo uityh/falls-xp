@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Box, Button, CircularProgress, Stack } from '@mui/material';
 import { TextArea, TextInput } from 'components/FormikMuiFields';
 import { Field, Form, Formik } from 'formik';
