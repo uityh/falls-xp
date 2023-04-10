@@ -10,7 +10,9 @@ import {
 	Button,
 	IconButton,
 	FormControl,
-	TextField
+	TextField,
+	Select,
+	MenuItem
 } from '@mui/material';
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
@@ -27,8 +29,8 @@ function PhotoReview() {
 	const [photoPage, setPhotoPage] = useState(1);
 	const [photoPages, setPhotoPages] = useState(1);
 
-	const [costInput, setCostInput] = useState(1);
 	const [dateInput, setDateInput] = useState(new Date());
+	const [resultSelect, setResultSelect] = useState('');
 
 	const MAX_PHOTOS = 4;
 
@@ -96,7 +98,9 @@ function PhotoReview() {
 					.map((url, idx) => {
 						return (
 							<Card
-								data-testid={`photo-review-thumbnail-${(photoPage - 1) * MAX_PHOTOS + idx}`}
+								data-testid={`photo-review-thumbnail-${
+									(photoPage - 1) * MAX_PHOTOS + idx
+								}`}
 								key={idx}
 								sx={{
 									m: 2,
@@ -107,7 +111,9 @@ function PhotoReview() {
 							>
 								<img className="review-photo-thumbnail" src={url}></img>
 								<Button
-									data-testid={`photo-review-view-button-${(photoPage - 1) * MAX_PHOTOS + idx}`}
+									data-testid={`photo-review-view-button-${
+										(photoPage - 1) * MAX_PHOTOS + idx
+									}`}
 									onClick={(event) => handleViewPhotoButton(event, idx)}
 									variant="contained"
 									sx={{ maxWidth: '50%', margin: 'auto' }}
@@ -131,25 +137,42 @@ function PhotoReview() {
 			</Box>
 			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
 				<FormControl>
-					<TextField
-						onChange={(e) => { setCostInput(e.target.value) }}
-						label="Estimated Cost"
-						type="number"
-						InputProps={{ inputProps: { min: 1 } }}
-						variant="filled"
-						required
-					></TextField>
-					<TextField
-						onChange={(e) => { setDateInput(e.target.value) }}
-						label="Estimated Completion Date"
-						variant="filled"
-						type="date"
-						margin="dense"
-						required
-						InputLabelProps={{ shrink: true }}
-					/>
-					<Button variant="contained">Approve</Button>
-					<Button variant="contained">Reject</Button>
+					<Select
+						size="small"
+						onChange={(e) => {
+							setResultSelect(e.target.value);
+						}}
+					>
+						<MenuItem value="approve">Approve</MenuItem>
+						<MenuItem value="reject">Reject</MenuItem>
+					</Select>
+					<br />
+					{resultSelect === 'reject' ? (
+						<TextField
+							label="Reason for Rejection"
+							multiline
+							variant="filled"
+							type="text"
+							margin="dense"
+							required
+							InputLabelProps={{ shrink: true }}
+						/>
+					) : (
+						resultSelect === 'approve' && (
+							<TextField
+								onChange={(e) => {
+									setDateInput(e.target.value);
+								}}
+								label="Estimated Completion Date"
+								variant="filled"
+								type="date"
+								margin="dense"
+								required
+								InputLabelProps={{ shrink: true }}
+							/>
+						)
+					)}
+					{resultSelect !== '' && <Button variant="contained">Submit</Button>}
 				</FormControl>
 			</Box>
 		</Box>

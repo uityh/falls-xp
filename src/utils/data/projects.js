@@ -135,13 +135,14 @@ export const markTaskAsComplete = async (projectId, taskName) => {
 export const addTaskToProject = async (
 	projectId,
 	taskName,
-	completePreviousTask = false
+	completePreviousTask = false,
+	taskEmployeeId = null
 ) => {
 	const taskTeamRelations = {
 		'initial inspection': 'onsite',
 		'pending review': 'operations',
 		'customer confirmation': 'sales',
-		installation: 'onsite',
+		'installation': 'onsite',
 	};
 
 	const foundProject = await getProjectByProjectId(projectId);
@@ -153,7 +154,7 @@ export const addTaskToProject = async (
 		startDate: today,
 		endDate: null,
 		team: taskTeamRelations[taskName],
-		employeeId: null,
+		employeeId: taskTeamRelations[taskName] === 'sales' ? foundProject.salesRepId : taskEmployeeId
 	};
 	foundProject.tasks.push(task);
 
