@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
 	Box,
 	Divider,
@@ -8,6 +9,7 @@ import {
 	TableHead,
 	TableRow,
 	Typography,
+	Button,
 } from '@mui/material';
 import { getAllProjects } from 'utils/data/projects';
 
@@ -44,6 +46,7 @@ export default function AdminDash({ user, header }) {
 								{headCell}
 							</TableCell>
 						))}
+						<TableCell>View Project</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -60,6 +63,11 @@ export default function AdminDash({ user, header }) {
 							<TableCell>{object.assignedWorkers?.join(', ')}</TableCell>
 							<TableCell>
 								{object.assignedWorkers?.includes(user?.id) ? 'Yes' : 'No'}
+							</TableCell>
+							<TableCell>
+								<Link to={`/project/${object.id}`}>
+									<Button variant="contained">View Project</Button>
+								</Link>
 							</TableCell>
 						</TableRow>
 					))}
