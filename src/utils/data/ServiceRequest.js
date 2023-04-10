@@ -13,7 +13,8 @@ export const createServiceRequest = async (
 	salesRepId,
 	address,
 	startDate,
-	customerNotes
+	customerNotes,
+	taskEmployeeId
 ) => {
 	customerId = checkString(customerId, 'customerId');
 	const thisCustomer = await getUserById(customerId);
@@ -35,7 +36,7 @@ export const createServiceRequest = async (
 		endDate: null,
 		status: 'in progress',
 		team: 'onsite',
-		employeeId: null,
+		employeeId: taskEmployeeId,
 	};
 
 	return await addDoc(collection(db, 'projects'), {
