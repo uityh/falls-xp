@@ -8,7 +8,7 @@ import OnsiteDashboard from './OnsiteDashboard';
 function Dashboard() {
 	const { user } = useAuthContext();
 
-	// if (user?.role === 'operations') return <OperationsDashboard user={user} />;
+	if (user?.role === 'operations') return <OperationsDashboard user={user} />;
 	if (user?.role === 'field') return <OnsiteDashboard user={user} />;
 
 	if (user !== null) {
