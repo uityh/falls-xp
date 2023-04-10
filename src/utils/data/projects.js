@@ -165,6 +165,29 @@ export const getProjectsByCustomerId = async (customerId, testdb) => {
 	return result;
 };
 
+export const getProjectsByStatus = async (status) => {
+	const projectsDoc = await getDocs(
+		query(collection(db, 'projects'), where('status', '==', status))
+	);
+	let result = [];
+	projectsDoc.forEach((pDoc) => {
+		result.push({
+			id: pDoc.id,
+			...pDoc.data(),
+		});
+	});
+	result = await Promise.all(
+		result.map(async (p) => {
+			const customer = await getUserById(p.customerId);
+			return {
+				...p,
+				customer,
+			};
+		})
+	);
+	return result;
+};
+
 export const createNewProject = async (customerId, address = '') => {
 	if (!customerId) {
 		throw new Error('A customer ID is required to create a new project');
