@@ -48,7 +48,7 @@ function Routes() {
 			<Route path="/project-views" element={<ProjectViews />} />
 			<Route path="/project-dashboard" element={<ProjectDashboard />} />
 			<Route path="/dashboard" element={<Dashboard />} />
-			<Route path="/photo-review/:projectid" element={<PhotoReview />} />
+			<Route path="/review/:projectid" element={<PhotoReview />} />
 			<Route path="*" element={<NotFound />} />
 		</RRDRoutes>
 	);
