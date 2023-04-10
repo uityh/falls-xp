@@ -1,134 +1,118 @@
 /* eslint-disable no-console */
-import { AppBar, Container, Toolbar, Box, Stack, Button } from '@mui/material';
-import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { AppBar, Container, Toolbar, Stack, Button } from '@mui/material';
+import React, { useMemo } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'contexts/Auth';
 import { signOut } from 'firebase/auth';
 import { auth } from 'utils/firebase';
+import { Logout } from '@mui/icons-material';
+import Logo from './Logo.png';
+
+const paths = {
+	users: {
+		label: 'Users',
+		path: '/users',
+	},
+	leads: {
+		label: 'Customer Leads',
+		path: '/customer-leads',
+	},
+	// serviceRequest: {
+	// 	label: 'Service Request',
+	// 	path: '/service-request',
+	// },
+	// viewProjects: {
+	// 	label: 'View your Projects',
+	// 	path: '/project-views',
+	// },
+	dashboard: {
+		label: 'Dashboard',
+		path: '/dashboard',
+	},
+	// projectsDashboard: {
+	// 	label: 'Project Dashboard',
+	// 	path: '/project-dashboard',
+	// },
+};
 
 function Navbar() {
-	const { user } = useAuthContext();
+	const { user, refreshAuthState } = useAuthContext();
+	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const handleSignOut = async () => {
 		try {
 			await signOut(auth);
+			await refreshAuthState();
 		} catch (e) {
 			console.error(e);
 		}
 	};
+
+	const navItems = useMemo(() => {
+		let items = [];
+		if (user?.role === 'admin') items = Object.values(paths);
+		else if (user?.role) {
+			if (user?.role === 'sales') items.push(paths.leads);
+			items.push(paths.dashboard);
+		}
+
+		return items || [];
+	}, [user?.role]);
 	return (
 		<AppBar
 			sx={{
-				backgroundColor: 'darkblue',
+				backgroundColor: 'rgba(255,255,255,0.8)',
 				backdropFilter: 'blur(20px)',
 			}}
 			position="sticky"
 		>
 			<Container>
 				<Toolbar disableGutters>
-					<Stack direction="row" justifyContent="space-between" width="100%">
-						<Box
-							sx={{
-								mr: 2,
-								color: 'white',
-								fontStyle: 'italic',
-								fontSize: '22px',
+					<Stack
+						direction="row"
+						justifyContent="space-between"
+						alignItems="center"
+						width="100%"
+					>
+						<Link
+							to="/dashboard"
+							style={{
+								height: '3rem',
 							}}
 						>
-							Falls XP
-						</Box>
-						<Stack gap={2} direction="row">
-							<NavLink
-								to="/"
-								style={({ isActive }) => {
-									return {
-										textDecoration: 'none',
-										color: isActive ? 'orange' : 'white',
-									};
+							<img
+								src={Logo}
+								alt="Falls XP"
+								style={{
+									height: '100%',
+									width: 'auto',
 								}}
-							>
-								Home
-							</NavLink>
-							{/* <NavLink
-							to="/sign-up"
-							style={({ isActive }) => {
-								return {
-									textDecoration: 'none',
-									color: isActive ? 'orange' : 'white',
-								};
-							}}
-						>
-							Sign Up
-						</NavLink> */}
-							<NavLink
-								to="/users"
-								style={({ isActive }) => {
-									return {
-										textDecoration: 'none',
-										color: isActive ? 'orange' : 'white',
-									};
-								}}
-							>
-								Users
-							</NavLink>
-							<NavLink
-								to="/customer-leads"
-								style={({ isActive }) => {
-									return {
-										textDecoration: 'none',
-										color: isActive ? 'orange' : 'white',
-									};
-								}}
-							>
-								Customer Leads
-							</NavLink>
-							{user && (user.role === 'sales' || user.role === 'admin') && (
-								<NavLink
-									to="/service-request"
-									style={({ isActive }) => {
-										return {
-											textDecoration: 'none',
-											color: isActive ? 'orange' : 'white',
-										};
+							/>
+						</Link>
+						<Stack gap={2} direction="row" sx={{ minHeight: 64 }}>
+							{navItems.map((item) => (
+								<Button
+									key={item.path}
+									onClick={() => {
+										navigate(item.path);
 									}}
+									sx={{
+										py: 2,
+										display: 'block',
+										borderRadius: 0,
+										color: 'black',
+										'&:disabled': {
+											borderTop: (theme) =>
+												`3px solid ${theme.palette.primary.main}`,
+											color: (theme) => theme.palette.primary.main,
+											pt: '13px',
+										},
+									}}
+									disabled={Boolean(pathname === item.path)}
 								>
-									Service Request
-								</NavLink>
-							)}
-
-							<NavLink
-								to="/project-views"
-								style={({ isActive }) => {
-									return {
-										textDecoration: 'none',
-										color: isActive ? 'orange' : 'white',
-									};
-								}}
-							>
-								View your Projects
-							</NavLink>
-							<NavLink
-								to="/dashboard"
-								style={({ isActive }) => {
-									return {
-										textDecoration: 'none',
-										color: isActive ? 'orange' : 'white',
-									};
-								}}
-							>
-								Dashboard
-							</NavLink>
-							<NavLink
-								to="/project-dashboard"
-								style={({ isActive }) => {
-									return {
-										textDecoration: 'none',
-										color: isActive ? 'orange' : 'white',
-									};
-								}}
-							>
-								Project Dashboard
-							</NavLink>
+									{item.label}
+								</Button>
+							))}
 						</Stack>
 						{user === null ? (
 							<Button
@@ -140,7 +124,11 @@ function Navbar() {
 								Sign In
 							</Button>
 						) : (
-							<Button variant="contained" onClick={handleSignOut}>
+							<Button
+								variant="outlined"
+								onClick={handleSignOut}
+								startIcon={<Logout />}
+							>
 								Sign Out
 							</Button>
 						)}
