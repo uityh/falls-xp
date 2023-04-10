@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { AppBar, Container, Toolbar, Stack, Button } from '@mui/material';
 import React, { useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';

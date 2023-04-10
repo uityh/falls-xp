@@ -168,6 +168,22 @@ export const createUser = async (user) => {
 	return getUserById(userDoc.id);
 };
 
+export const getUsersByRole = async (role) => {
+	const usersDoc = await getDocs(
+		query(collection(db, 'users'), where('role', '==', role))
+	);
+	const result = [];
+	usersDoc.forEach((userDoc) => {
+		result.push({
+			id: userDoc.id,
+			...userDoc.data(),
+		});
+	});
+	if (result.length === 0)
+		throw new Error('No users with the provided role found');
+	return result;
+};
+
 // export const createUserPassword = async (user) => {
 // 	if (checkEmailExists(user.email))
 // 		throw new Error('An account with this email already exists');

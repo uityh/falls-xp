@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { onAuthStateChanged } from 'firebase/auth';
 import React, {
 	createContext,
