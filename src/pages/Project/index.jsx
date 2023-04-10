@@ -105,10 +105,10 @@ export default function Project() {
 		if (user.role === 'admin') {
 			card = (
 				<List>
-					<ListItem>
+					<ListItem data-testid="id-item">
 						<ListItemText primary={`Id: ${thisProject.id}`} />
 					</ListItem>
-					<ListItem>
+					<ListItem data-testid="progress-item">
 						<ListItemText primary="Progress: " />
 					</ListItem>
 					<ListItem>
@@ -125,7 +125,7 @@ export default function Project() {
 					</ListItem>
 					{thisProject.tasks.map((task) => {
 						return (
-							<List component="div">
+							<List data-testid="task-item" component="div">
 								<ListItem sx={{ pl: 6 }}>
 									<ListItemText primary={`Task Name: ${task.taskName}`} />
 								</ListItem>
@@ -145,21 +145,21 @@ export default function Project() {
 							</List>
 						);
 					})}
-					<ListItem>
+					<ListItem data-testid="status-item">
 						<ListItemText primary={`Status: ${thisProject.status}`} />
 					</ListItem>
-					<ListItem>
+					<ListItem data-testid="address-item">
 						<ListItemText primary={`Address: ${thisProject.address}`} />
 					</ListItem>
-					<ListItem>
+					<ListItem data-testid="cost-item">
 						<ListItemText primary={`Cost: ${thisProject.cost}`} />
 					</ListItem>
-					<ListItem>
+					<ListItem data-testid="notes-item">
 						<ListItemText
 							primary={`Customer Notes: ${thisProject.customerNotes}`}
 						/>
 					</ListItem>
-					<ListItem>
+					<ListItem data-testid="workers-item">
 						<ListItemText
 							primary={`Assigned Workers: ${thisProject.assignedWorkers.join(
 								', '
@@ -168,7 +168,7 @@ export default function Project() {
 					</ListItem>
 					{thisProject.imageUrls.length > 0 ? (
 						<div>
-							<ListItem>
+							<ListItem data-testid="photo-item">
 								<ListItemText primary="Photos: " />
 							</ListItem>
 							<ListItem>
