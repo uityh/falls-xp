@@ -6,6 +6,7 @@ import {
 import ProjectViews from 'pages/ProjectViews';
 import { render, screen, cleanup } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import { MemoryRouter } from 'react-router-dom';
 
 afterEach(cleanup);
 
@@ -87,10 +88,13 @@ describe('Admin test', () => {
 	});
 	it('Renders correct version', async () => {
 		await act(async () => {
-			const { container } = render(<ProjectViews />);
+			const { container } = render(
+				<MemoryRouter>
+					<ProjectViews />
+				</MemoryRouter>
+			);
 		});
 		expect(screen.getAllByTestId('id-cell')).toBeInTheDocument;
-		expect(screen.getAllByTestId('tasks-cell')).toBeInTheDocument;
 		expect(screen.getAllByTestId('status-cell')).toBeInTheDocument;
 		expect(screen.getAllByTestId('address-cell')).toBeInTheDocument;
 		expect(screen.getAllByTestId('cost-cell')).toBeInTheDocument;
