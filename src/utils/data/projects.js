@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from 'utils/firebase';
 import { getUserById } from 'utils/data/users';
+import { checkString, checkDateString } from 'utils/helpers/validation';
 
 export const getAllProjects = async (testdb) => {
 	if (testdb) {
@@ -210,6 +211,40 @@ export const getProjectLeads = async () => {
 		})
 	);
 	return result;
+};
+
+export const createServiceRequest = async (
+	projectIdParam,
+	salesRepIdParam,
+	startDateParam,
+	customerNotesParam
+) => {
+	const projectId = checkString(projectIdParam, 'projectId');
+	await getProjectByProjectId(projectId);
+
+	const salesRepId = checkString(salesRepIdParam, 'salesRepId');
+	const startDate = checkDateString(startDateParam, 'startDate');
+	let customerNotes = '';
+	if (customerNotesParam !== '') {
+		customerNotes = checkString(customerNotesParam, 'customerNotes');
+	}
+
+	const task = {
+		taskName: 'initial inspection',
+		startDate,
+		status: 'in progress',
+		team: 'onsite',
+	};
+
+	await updateDoc(doc(db, 'projects', projectId), {
+		status: 'not started',
+		salesRepId,
+		customerNotes,
+		startDate,
+		tasks: [task],
+	});
+
+	return getProjectByProjectId(projectId);
 };
 
 // Create service request is the functionality to be used for creating a project

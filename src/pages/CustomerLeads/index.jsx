@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import { getProjectLeads } from 'utils/data/projects';
 import { useAuthContext } from 'contexts/Auth';
+import Modal from 'components/Modal';
+import InitialInspection from 'components/Forms/InitialInspection';
 // import CustomerData from './CustomerData';
 
 const headers = ['Address', 'Customer', 'Contact', 'Action'];
@@ -27,12 +29,29 @@ function CustomerLeads() {
 	useEffect(() => {
 		getLeads();
 	}, [getLeads]);
+	const [inspectionModal, setInspectionModal] = useState(false);
 	return (
 		<Box>
-			{/* <Typography variant="h4" component="h1">
-				Customer
-			</Typography>
-			<Divider sx={{ mb: 5, mt: 1 }} /> */}
+			<Modal
+				title="Initiate Initial Inspection"
+				isOpen={Boolean(inspectionModal)}
+				handleClose={() => {
+					setInspectionModal(false);
+				}}
+				sx={{
+					maxWidth: '50vw',
+				}}
+			>
+				<InitialInspection
+					projectId={inspectionModal}
+					salesRepId={user.id}
+					onSuccess={(res) => {
+						const updatedLeads = leads.filter((lead) => lead.id !== res.id);
+						setLeads(updatedLeads);
+						setInspectionModal(false);
+					}}
+				/>
+			</Modal>
 			<Table>
 				<TableHead>
 					<TableRow>
@@ -61,7 +80,12 @@ function CustomerLeads() {
 										<Button variant="outlined" color="error">
 											Declined
 										</Button>
-										<Button variant="contained">
+										<Button
+											variant="contained"
+											onClick={() => {
+												setInspectionModal(lead.id);
+											}}
+										>
 											Initiate Initial Inspection
 										</Button>
 									</Stack>

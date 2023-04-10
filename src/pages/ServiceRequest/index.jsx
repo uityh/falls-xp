@@ -3,7 +3,7 @@ import React from 'react';
 import { TextField, Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from 'contexts/Auth';
-import { createServiceRequest } from 'utils/data/ServiceRequest';
+import { createServiceRequest } from 'utils/data/projects';
 import { getUserById } from 'utils/data/users';
 
 export default function ServiceRequest() {

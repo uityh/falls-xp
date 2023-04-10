@@ -16,10 +16,10 @@ const paths = {
 		label: 'Customer Leads',
 		path: '/customer-leads',
 	},
-	serviceRequest: {
-		label: 'Service Request',
-		path: '/service-request',
-	},
+	// serviceRequest: {
+	// 	label: 'Service Request',
+	// 	path: '/service-request',
+	// },
 	// viewProjects: {
 	// 	label: 'View your Projects',
 	// 	path: '/project-views',
@@ -51,7 +51,7 @@ function Navbar() {
 		let items = [];
 		if (user?.role === 'admin') items = Object.values(paths);
 		else if (user?.role) {
-			if (user?.role === 'sales') items.push(paths.leads, paths.serviceRequest);
+			if (user?.role === 'sales') items.push(paths.leads);
 			items.push(paths.dashboard);
 		}
 
