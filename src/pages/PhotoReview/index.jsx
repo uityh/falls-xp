@@ -12,7 +12,8 @@ import {
 	FormControl,
 	TextField,
 	Select,
-	MenuItem
+	MenuItem,
+	InputLabel
 } from '@mui/material';
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
@@ -45,9 +46,6 @@ function PhotoReview() {
 	}, [projectid]);
 
 	const handleViewPhotoButton = (idx) => {
-		console.log('idx: ', idx);
-		console.log('photoIdx: ', photoIdx);
-		console.log((photoPage - 1) * MAX_PHOTOS + idx);
 		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
 	};
 
@@ -147,8 +145,10 @@ function PhotoReview() {
 				)}
 			</Box>
 			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+				<InputLabel id='status-select-label'>Review Results</InputLabel>
 				<FormControl>
 					<Select
+						labelId='status-select-label'
 						data-testid='status-select'
 						value={statusInput}
 						size="small"
@@ -158,6 +158,7 @@ function PhotoReview() {
 					>
 						<MenuItem data-testid='approve-menu-item' value="approve">Approve</MenuItem>
 						<MenuItem data-testid='reject-menu-item' value="reject">Reject</MenuItem>
+
 					</Select>
 					<br />
 					{statusInput === 'reject' ? (
