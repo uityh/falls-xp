@@ -17,7 +17,7 @@ import Modal from 'components/Modal';
 import InitialInspection from 'components/Forms/InitialInspection';
 // import CustomerData from './CustomerData';
 
-const headers = ['Address', 'Customer', 'Contact', 'Action'];
+const headers = ['Address', 'Customer', 'Contact', 'E-Mail', 'Action'];
 
 function CustomerLeads() {
 	const [leads, setLeads] = useState([]);
@@ -37,9 +37,6 @@ function CustomerLeads() {
 				isOpen={Boolean(inspectionModal)}
 				handleClose={() => {
 					setInspectionModal(false);
-				}}
-				sx={{
-					maxWidth: '50vw',
 				}}
 			>
 				<InitialInspection
@@ -74,6 +71,7 @@ function CustomerLeads() {
 								{lead.customer?.firstName || ''} {lead.customer?.lastName || ''}
 							</TableCell>
 							<TableCell>{lead.customer?.phone || ''}</TableCell>
+							<TableCell>{lead.customer?.email || ''}</TableCell>
 							<TableCell>
 								{user?.role === 'sales' ? (
 									<Stack direction="row" gap={2} justifyContent="flex-end">

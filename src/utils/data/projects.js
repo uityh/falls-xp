@@ -237,7 +237,7 @@ export const createServiceRequest = async (
 	};
 
 	await updateDoc(doc(db, 'projects', projectId), {
-		status: 'not started',
+		status: 'initial inspection',
 		salesRepId,
 		customerNotes,
 		startDate,
