@@ -1,13 +1,25 @@
-/* eslint-disable no-console */
-import React from 'react';
-import { TextField, Button, Typography } from '@mui/material';
+/* eslint-disable  */
+import React, { useEffect, useState } from 'react';
+import { TextField, Button, Typography, Select, MenuItem, InputLabel } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from 'contexts/Auth';
 import { createServiceRequest } from 'utils/data/ServiceRequest';
-import { getUserById } from 'utils/data/users';
+import { getUserById, getUsersByRole } from 'utils/data/users';
 
 export default function ServiceRequest() {
 	const { user } = useAuthContext();
+	const [onsiteUsers, setOnsiteUsers] = useState([]);
+	const [selectedOnsiteUser, setSelectedOnsiteUser] = useState(null);
+
+	useEffect(() => {
+		const fetchOnsiteUsers = async () => {
+			const users = await getUsersByRole('onsite');
+			setOnsiteUsers(users);
+			users.length ? setSelectedOnsiteUser(users[0].id) : setSelectedOnsiteUser(null);
+		};
+		fetchOnsiteUsers();
+	}, []);
+
 	const submitRequest = async (e) => {
 		e.preventDefault();
 		try {
@@ -24,7 +36,8 @@ export default function ServiceRequest() {
 				user.id,
 				e.target.elements.address.value,
 				e.target.elements.startDate.value,
-				e.target.elements.description.value
+				e.target.elements.description.value,
+				selectedOnsiteUser
 			);
 			document.getElementById('service-request-form').reset();
 			document.getElementById('error-field').innerHTML = '';
@@ -42,6 +55,15 @@ export default function ServiceRequest() {
 			<div>
 				<Typography>You are not logged in.</Typography>
 				<Link to="/sign-in">Sign In</Link>
+			</div>
+		);
+	}
+	if(onsiteUsers.length === 0) { 
+		return (
+			<div>
+				<Typography>
+					No onsite users found. Please wait. 
+				</Typography>
 			</div>
 		);
 	}
@@ -90,6 +112,26 @@ export default function ServiceRequest() {
 						placeholder="Enter a Description"
 					/>
 					<br />
+					<InputLabel id="onsiteUserLabel">Onsite Employee</InputLabel>
+					<Select
+						id="onsiteUser"
+						labelId='onsiteUserLabel'
+						variant="filled"
+						size='small'
+						value={selectedOnsiteUser}
+						required
+						onChange={(e) => { setSelectedOnsiteUser(e.target.value) }}
+						>
+						{onsiteUsers.map((user) => {
+							return (
+								<MenuItem key={user.id} value={user.id}>
+									{user.firstName} {user.lastName}
+								</MenuItem>
+							);
+						})}
+					</Select>
+					<br />
+					<br />
 					<Button
 						variant="contained"
 						type="submit"
@@ -98,7 +140,7 @@ export default function ServiceRequest() {
 							color: 'black',
 							backgroundColor: 'lightgrey',
 							borderColor: 'black',
-							borderRadius: '20px',
+							borderRadius: '20px'
 						}}
 					>
 						Submit Request

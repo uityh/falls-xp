@@ -12,6 +12,7 @@ import SignIn from 'pages/SignIn';
 import Users from 'pages/Users';
 import ProjectDashboard from 'pages/ProjectDashboard';
 import Dashboard from 'pages/Dashboard';
+import Project from 'pages/Project';
 
 function Routes() {
 	return (
@@ -31,6 +32,7 @@ function Routes() {
 			<Route path="/project-dashboard" element={<ProjectDashboard />} />
 			<Route path="/dashboard" element={<Dashboard />} />
 			<Route path="/photo-review/:projectid" element={<PhotoReview />} />
+			<Route path="/project/:projectid" element={<Project />} />
 			<Route path="*" element={<NotFound />} />
 		</RRDRoutes>
 	);
