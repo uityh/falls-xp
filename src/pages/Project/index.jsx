@@ -103,6 +103,7 @@ export default function Project() {
 		let card = null;
 		// Render a different card for each type of user
 		if (user.role === 'admin') {
+			console.log(thisProject);
 			card = (
 				<List>
 					<ListItem data-testid="id-item">
@@ -124,6 +125,7 @@ export default function Project() {
 						<ListItemText primary="Tasks: " />
 					</ListItem>
 					{thisProject.tasks.map((task) => {
+						console.log(task.startDate);
 						return (
 							<List data-testid="task-item" component="div">
 								<ListItem sx={{ pl: 6 }}>
