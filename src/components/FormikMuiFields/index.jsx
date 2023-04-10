@@ -5,6 +5,8 @@ import {
 	Select as MuiSelect,
 	FormHelperText,
 	InputLabel,
+	TextareaAutosize,
+	FormLabel,
 } from '@mui/material';
 import React from 'react';
 
@@ -61,6 +63,31 @@ export function Select({
 			<FormHelperText error={touched[name] && Boolean(errors[name])}>
 				{touched[name] && errors[name]}
 			</FormHelperText>
+		</FormControl>
+	);
+}
+
+export function TextArea({
+	field: { name, value, onChange, onBlur },
+	form,
+	label,
+	required = false,
+	...rest
+}) {
+	return (
+		<FormControl fullWidth>
+			<FormLabel>{label}</FormLabel>
+			<TextareaAutosize
+				variant="outlined"
+				name={name}
+				value={value}
+				onChange={onChange}
+				onBlur={onBlur}
+				// error={touched[name] && Boolean(errors[name])}
+				// helperText={touched[name] && errors[name]}
+				required={required}
+				{...rest}
+			/>
 		</FormControl>
 	);
 }

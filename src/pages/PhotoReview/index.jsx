@@ -36,7 +36,7 @@ function PhotoReview() {
 
 	useEffect(() => {
 		const fetchProject = async () => {
-			const project = await getProjectByProjectId('F9ieqoKKXEmLOik946Nb');
+			const project = await getProjectByProjectId(projectid);
 			setProjectData(project);
 			setPhotoPages(Math.ceil(project.imageUrls.length / MAX_PHOTOS));
 		};
@@ -106,7 +106,7 @@ function PhotoReview() {
 									m: 2,
 									display: 'flex',
 									flexDirection: 'column',
-									border: 'grey 1px solid'
+									border: 'grey 1px solid',
 								}}
 							>
 								<img className="review-photo-thumbnail" src={url}></img>

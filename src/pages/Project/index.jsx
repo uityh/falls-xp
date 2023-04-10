@@ -10,7 +10,7 @@ import {
 	Button,
 } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuthContext } from 'contexts/Auth';
 
 import {
@@ -105,6 +105,92 @@ export default function Project() {
 		if (user.role === 'admin') {
 			card = (
 				<List>
+					<ListItem data-testid="id-item">
+						<ListItemText primary={`Id: ${thisProject.id}`} />
+					</ListItem>
+					<ListItem data-testid="progress-item">
+						<ListItemText primary="Progress: " />
+					</ListItem>
+					<ListItem>
+						<CircularProgressWithLabel
+							value={
+								thisProject.tasks.length === 0
+									? 0
+									: (thisProject.tasks.length - 1) * 25
+							}
+						/>
+					</ListItem>
+					<ListItem>
+						<ListItemText primary="Tasks: " />
+					</ListItem>
+					{thisProject.tasks.map((task) => {
+						return (
+							<List data-testid="task-item" component="div">
+								<ListItem sx={{ pl: 6 }}>
+									<ListItemText primary={`Task Name: ${task.taskName}`} />
+								</ListItem>
+								<ListItem sx={{ pl: 6 }}>
+									<ListItemText primary={`Task Team: ${task.team}`} />
+								</ListItem>
+								<ListItem sx={{ pl: 6 }}>
+									<ListItemText
+										primary={`Task Start Date: ${task.startDate
+											.toDate()
+											.toDateString()}`}
+									/>
+								</ListItem>
+								<ListItem sx={{ pl: 6 }}>
+									<ListItemText primary={`Task Status: ${task.status}`} />
+								</ListItem>
+							</List>
+						);
+					})}
+					<ListItem data-testid="status-item">
+						<ListItemText primary={`Status: ${thisProject.status}`} />
+					</ListItem>
+					<ListItem data-testid="address-item">
+						<ListItemText primary={`Address: ${thisProject.address}`} />
+					</ListItem>
+					<ListItem data-testid="cost-item">
+						<ListItemText primary={`Cost: ${thisProject.cost}`} />
+					</ListItem>
+					<ListItem data-testid="notes-item">
+						<ListItemText
+							primary={`Customer Notes: ${thisProject.customerNotes}`}
+						/>
+					</ListItem>
+					<ListItem data-testid="workers-item">
+						<ListItemText
+							primary={`Assigned Workers: ${thisProject.assignedWorkers.join(
+								', '
+							)}`}
+						/>
+					</ListItem>
+					{thisProject.imageUrls.length > 0 ? (
+						<div>
+							<ListItem data-testid="photo-item">
+								<ListItemText primary="Photos: " />
+							</ListItem>
+							<ListItem>
+								<Link to={`/photo-review/${thisProject.id}`}>
+									<Button variant="contained">View Photos</Button>
+								</Link>
+							</ListItem>
+						</div>
+					) : (
+						<ListItem />
+					)}
+					<ListItem>
+						<Button variant="contained" onClick={handleAddTask}>
+							Submit
+						</Button>
+					</ListItem>
+				</List>
+			);
+		}
+		if (user.role === 'operations') {
+			card = (
+				<List>
 					<ListItem>
 						<ListItemText primary={`Id: ${thisProject.id}`} />
 					</ListItem>
@@ -159,76 +245,17 @@ export default function Project() {
 							primary={`Customer Notes: ${thisProject.customerNotes}`}
 						/>
 					</ListItem>
-					<ListItem>
-						<ListItemText
-							primary={`Assigned Workers: ${thisProject.assignedWorkers.join(
-								', '
-							)}`}
-						/>
-					</ListItem>
-					<ListItem>
-						<Button variant="contained" onClick={handleAddTask}>
-							Submit
-						</Button>
-					</ListItem>
-				</List>
-			);
-		}
-		if (user.role === 'operations') {
-			card = (
-				<List>
-					<ListItem>
-						<ListItemText primary={`Id: ${thisProject.id}`} />
-					</ListItem>
-					<ListItem>
-						<ListItemText primary="Progress: " />
-					</ListItem>
-					<ListItem>
-						<ListItemText primary="Tasks: " />
-					</ListItem>
-					{thisProject.tasks.map((task) => {
-						return (
-							<List component="div">
-								<ListItem sx={{ pl: 6 }}>
-									<ListItemText primary={`Task Name: ${task.taskName}`} />
-								</ListItem>
-								<ListItem sx={{ pl: 6 }}>
-									<ListItemText primary={`Task Team: ${task.team}`} />
-								</ListItem>
-								<ListItem sx={{ pl: 6 }}>
-									<ListItemText
-										primary={`Task Start Date: ${task.startDate
-											.toDate()
-											.toDateString()}`}
-									/>
-								</ListItem>
-								<ListItem sx={{ pl: 6 }}>
-									<ListItemText primary={`Task Status: ${task.status}`} />
-								</ListItem>
-							</List>
-						);
-					})}
-					<ListItem>
-						<ListItemText primary={`Status: ${thisProject.status}`} />
-					</ListItem>
-					<ListItem>
-						<ListItemText primary={`Address: ${thisProject.address}`} />
-					</ListItem>
-					<ListItem>
-						<ListItemText primary={`Cost: ${thisProject.cost}`} />
-					</ListItem>
-					<ListItem>
-						<ListItemText
-							primary={`Customer Notes: ${thisProject.customerNotes}`}
-						/>
-					</ListItem>
-					{thisProject.tasks[0].status === 'complete' ? (
-						<ListItem>
-							<ListItemText primary="Photos: " />
-							<Link to={`/photo-review/${thisProject.id}`}>
-								<Button variant="contained">View Photos</Button>
-							</Link>
-						</ListItem>
+					{thisProject.imageUrls.length > 0 ? (
+						<div>
+							<ListItem>
+								<ListItemText primary="Photos: " />
+							</ListItem>
+							<ListItem>
+								<Link to={`/photo-review/${thisProject.id}`}>
+									<Button variant="contained">View Photos</Button>
+								</Link>
+							</ListItem>
+						</div>
 					) : (
 						<ListItem />
 					)}
@@ -250,6 +277,15 @@ export default function Project() {
 						<ListItemText primary="Progress: " />
 					</ListItem>
 					<ListItem>
+						<CircularProgressWithLabel
+							value={
+								thisProject.tasks.length === 0
+									? 0
+									: (thisProject.tasks.length - 1) * 25
+							}
+						/>
+					</ListItem>
+					<ListItem>
 						<ListItemText primary="Tasks: " />
 					</ListItem>
 					{thisProject.tasks.map((task) => {
@@ -288,13 +324,17 @@ export default function Project() {
 							primary={`Customer Notes: ${thisProject.customerNotes}`}
 						/>
 					</ListItem>
-					{thisProject.tasks[0].status === 'complete' ? (
-						<ListItem>
-							<ListItemText primary="Photos: " />
-							<Link to={`/photo-review/${thisProject.id}`}>
-								<Button variant="contained">View Photos</Button>
-							</Link>
-						</ListItem>
+					{thisProject.imageUrls.length > 0 ? (
+						<div>
+							<ListItem>
+								<ListItemText primary="Photos: " />
+							</ListItem>
+							<ListItem>
+								<Link to={`/photo-review/${thisProject.id}`}>
+									<Button variant="contained">View Photos</Button>
+								</Link>
+							</ListItem>
+						</div>
 					) : (
 						<ListItem />
 					)}
@@ -314,6 +354,15 @@ export default function Project() {
 					</ListItem>
 					<ListItem>
 						<ListItemText primary="Progress: " />
+					</ListItem>
+					<ListItem>
+						<CircularProgressWithLabel
+							value={
+								thisProject.tasks.length === 0
+									? 0
+									: (thisProject.tasks.length - 1) * 25
+							}
+						/>
 					</ListItem>
 					<ListItem>
 						<ListItemText primary="Tasks: " />

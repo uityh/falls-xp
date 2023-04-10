@@ -1,30 +1,37 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
 import { useAuthContext } from 'contexts/Auth';
-import AdminDash from './AdminDash';
-import OnsiteDash from './OnsiteDash';
-import OperationsDash from './OperationsDash';
+import { Navigate } from 'react-router-dom';
+import Dash from './Dash';
+import OperationsDashboard from './OperationsDashboard';
+import OnsiteDashboard from './OnsiteDashboard';
 
 function Dashboard() {
 	const { user } = useAuthContext();
 
+	if (user?.role === 'operations') return <OperationsDashboard user={user} />;
+	if (user?.role === 'field') return <OnsiteDashboard user={user} />;
+
 	if (user !== null) {
-		if (user.role === 'admin') {
-			return AdminDash(user);
+		let header = 'Dashboard';
+		switch (user.role) {
+			case 'admin':
+				header = 'Admin Dashboard';
+				break;
+			case 'onsite':
+				header = 'On-Site Team Dashboard';
+				break;
+			case 'operations':
+				header = 'Operations Team Dashboard';
+				break;
+			case 'sales':
+				header = 'Sales Team Dashboard';
+				break;
+			default:
+				break;
 		}
-		if (user.role === 'operations') {
-			return OperationsDash(user);
-		}
-		if (user.role === 'field') {
-			return OnsiteDash(user);
-		}
+		return <Dash user={user} header={header} />;
 	}
-	return (
-		<Box>
-			<Typography>Dashboard</Typography>
-			<Typography>Not Logged In</Typography>
-		</Box>
-	);
+	return <Navigate to="/sign-in" />;
 }
 
 export default Dashboard;

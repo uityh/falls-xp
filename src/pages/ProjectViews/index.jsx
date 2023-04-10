@@ -39,6 +39,7 @@ export default function ProjectViews() {
 				'Address',
 				'Cost',
 				'Customer Notes',
+				'Photos',
 				'Assigned Workers',
 			];
 			return (
@@ -66,9 +67,9 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<Link to={`/project/${project.id}`}>
-										<TableCell data-testid="id-cell">{project.id}</TableCell>
-									</Link>
+									<TableCell data-testid="id-cell">
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
+									</TableCell>
 									<TableCell data-testid="status-cell">
 										{project.status}
 									</TableCell>
@@ -81,6 +82,15 @@ export default function ProjectViews() {
 									<TableCell data-testid="notes-cell">
 										{project.customerNotes}
 									</TableCell>
+									{project.imageUrls.length > 0 ? (
+										<TableCell>
+											<Link to={`/photo-review/${project.id}`}>
+												<Button variant="contained">View Photos</Button>
+											</Link>
+										</TableCell>
+									) : (
+										<TableCell></TableCell>
+									)}
 									<TableCell data-testid="assigned-workers-cell">
 										{project.assignedWorkers.join(', ')}
 									</TableCell>
@@ -120,16 +130,16 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<Link to={`/project/${project.id}`}>
-										<TableCell>{project.id}</TableCell>
-									</Link>
+									<TableCell>
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
+									</TableCell>
 									<TableCell>{project.status}</TableCell>
 									<TableCell>{project.address}</TableCell>
 									<TableCell>
 										{project.cost === 0 ? 'TBD' : project.cost}
 									</TableCell>
 									<TableCell>{project.customerNotes}</TableCell>
-									{project.tasks.includes('initial inspection') ? (
+									{project.imageUrls.length > 0 ? (
 										<TableCell>
 											<Link to={`/photo-review/${project.id}`}>
 												<Button variant="contained">View Photos</Button>
@@ -173,9 +183,9 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<Link to={`/project/${project.id}`}>
-										<TableCell data-testid="id-cell">{project.id}</TableCell>
-									</Link>
+									<TableCell data-testid="id-cell">
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
+									</TableCell>
 									<TableCell data-testid="status-cell">
 										{project.status}
 									</TableCell>
@@ -224,13 +234,13 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<Link to={`/project/${project.id}`}>
-										<TableCell>{project.id}</TableCell>
-									</Link>
+									<TableCell>
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
+									</TableCell>
 									<TableCell>{project.status}</TableCell>
 									<TableCell>{project.address}</TableCell>
 									<TableCell>{project.customerNotes}</TableCell>
-									{project.tasks.includes('initial inspection') ? (
+									{project.imageUrls.length > 0 ? (
 										<TableCell>
 											<Link to={`/photo-review/${project.id}`}>
 												<Button variant="contained">View Photos</Button>
@@ -274,9 +284,9 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<Link to={`/project/${project.id}`}>
-										<TableCell>{project.id}</TableCell>
-									</Link>
+									<TableCell>
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
+									</TableCell>
 									<TableCell>{project.status}</TableCell>
 									<TableCell>{project.address}</TableCell>
 									<TableCell>
