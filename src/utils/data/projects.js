@@ -169,13 +169,22 @@ export const getProjectsByStatus = async (status) => {
 	const projectsDoc = await getDocs(
 		query(collection(db, 'projects'), where('status', '==', status))
 	);
-	const result = [];
+	let result = [];
 	projectsDoc.forEach((pDoc) => {
 		result.push({
 			id: pDoc.id,
 			...pDoc.data(),
 		});
 	});
+	result = await Promise.all(
+		result.map(async (p) => {
+			const customer = await getUserById(p.customerId);
+			return {
+				...p,
+				customer,
+			};
+		})
+	);
 	return result;
 };
 
