@@ -45,6 +45,9 @@ function PhotoReview() {
 	}, [projectid]);
 
 	const handleViewPhotoButton = (idx) => {
+		console.log('idx: ', idx);
+		console.log('photoIdx: ', photoIdx);
+		console.log((photoPage - 1) * MAX_PHOTOS + idx);
 		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
 	};
 
@@ -122,7 +125,7 @@ function PhotoReview() {
 									data-testid={`photo-review-view-button-${
 										(photoPage - 1) * MAX_PHOTOS + idx
 									}`}
-									onClick={(event) => handleViewPhotoButton(event, idx)}
+									onClick={() => handleViewPhotoButton(idx)}
 									variant="contained"
 									sx={{ maxWidth: '50%', margin: 'auto' }}
 								>
@@ -146,18 +149,20 @@ function PhotoReview() {
 			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
 				<FormControl>
 					<Select
+						data-testid='status-select'
 						value={statusInput}
 						size="small"
 						onChange={(e) => {
 							setStatusInput(e.target.value);
 						}}
 					>
-						<MenuItem value="approve">Approve</MenuItem>
-						<MenuItem value="reject">Reject</MenuItem>
+						<MenuItem data-testid='approve-menu-item' value="approve">Approve</MenuItem>
+						<MenuItem data-testid='reject-menu-item' value="reject">Reject</MenuItem>
 					</Select>
 					<br />
 					{statusInput === 'reject' ? (
 						<TextField
+							data-testid='reject-reason-input'
 							label="Reason for Rejection"
 							multiline
 							variant="filled"
@@ -169,6 +174,7 @@ function PhotoReview() {
 					) : (
 						statusInput === 'approve' && (
 							<TextField
+								data-testid='date-input'
 								onChange={(e) => {
 									setDateInput(e.target.value);
 								}}
@@ -181,7 +187,7 @@ function PhotoReview() {
 							/>
 						)
 					)}
-					{statusInput !== '' && <Button onClick={handleSubmitButton} variant="contained">Submit</Button>}
+					{statusInput !== '' && <Button data-testid='submit-button' onClick={handleSubmitButton} variant="contained">Submit</Button>}
 				</FormControl>
 			</Box>
 		</Box>
