@@ -35,11 +35,11 @@ export default function ProjectViews() {
 			// TODO: Put in a connection to view the pictures for each project
 			headers = [
 				'ID',
-				'Tasks',
 				'Status',
 				'Address',
 				'Cost',
 				'Customer Notes',
+				'Photos',
 				'Assigned Workers',
 			];
 			return (
@@ -67,9 +67,8 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<TableCell data-testid="id-cell">{project.id}</TableCell>
-									<TableCell data-testid="tasks-cell">
-										{project.tasks.join(', ')}
+									<TableCell data-testid="id-cell">
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
 									</TableCell>
 									<TableCell data-testid="status-cell">
 										{project.status}
@@ -83,6 +82,15 @@ export default function ProjectViews() {
 									<TableCell data-testid="notes-cell">
 										{project.customerNotes}
 									</TableCell>
+									{project.imageUrls.length > 0 ? (
+										<TableCell>
+											<Link to={`/photo-review/${project.id}`}>
+												<Button variant="contained">View Photos</Button>
+											</Link>
+										</TableCell>
+									) : (
+										<TableCell></TableCell>
+									)}
 									<TableCell data-testid="assigned-workers-cell">
 										{project.assignedWorkers.join(', ')}
 									</TableCell>
@@ -96,15 +104,7 @@ export default function ProjectViews() {
 		if (user.role === 'operations') {
 			// Gets any projects they are assigned to, shows relevant info and pictures
 			// TODO: Put in a connection to view the pictures for each project
-			headers = [
-				'ID',
-				'Tasks',
-				'Status',
-				'Address',
-				'Cost',
-				'Customer Notes',
-				'Photos',
-			];
+			headers = ['ID', 'Status', 'Address', 'Cost', 'Customer Notes', 'Photos'];
 			return (
 				<div>
 					<Typography className="body-text">
@@ -130,15 +130,16 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<TableCell>{project.id}</TableCell>
-									<TableCell>{project.tasks.join(', ')}</TableCell>
+									<TableCell>
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
+									</TableCell>
 									<TableCell>{project.status}</TableCell>
 									<TableCell>{project.address}</TableCell>
 									<TableCell>
 										{project.cost === 0 ? 'TBD' : project.cost}
 									</TableCell>
 									<TableCell>{project.customerNotes}</TableCell>
-									{project.tasks.includes('initial inspection') ? (
+									{project.imageUrls.length > 0 ? (
 										<TableCell>
 											<Link to={`/photo-review/${project.id}`}>
 												<Button variant="contained">View Photos</Button>
@@ -182,7 +183,9 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<TableCell data-testid="id-cell">{project.id}</TableCell>
+									<TableCell data-testid="id-cell">
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
+									</TableCell>
 									<TableCell data-testid="status-cell">
 										{project.status}
 									</TableCell>
@@ -205,7 +208,7 @@ export default function ProjectViews() {
 		if (user.role === 'field') {
 			// Gets projects they're assigned to, has relevant info and pictures
 			// TODO: Put in a connection to view the pictures for each project
-			headers = ['ID', 'Tasks', 'Status', 'Address', 'Customer Notes'];
+			headers = ['ID', 'Status', 'Address', 'Customer Notes', 'Photos'];
 			return (
 				<div>
 					<Typography className="body-text">
@@ -231,11 +234,21 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<TableCell>{project.id}</TableCell>
-									<TableCell>{project.tasks.join(', ')}</TableCell>
+									<TableCell>
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
+									</TableCell>
 									<TableCell>{project.status}</TableCell>
 									<TableCell>{project.address}</TableCell>
 									<TableCell>{project.customerNotes}</TableCell>
+									{project.imageUrls.length > 0 ? (
+										<TableCell>
+											<Link to={`/photo-review/${project.id}`}>
+												<Button variant="contained">View Photos</Button>
+											</Link>
+										</TableCell>
+									) : (
+										<TableCell></TableCell>
+									)}
 								</TableRow>
 							))}
 						</TableBody>
@@ -271,7 +284,9 @@ export default function ProjectViews() {
 						<TableBody>
 							{involvedProjects.map((project) => (
 								<TableRow key={project.id}>
-									<TableCell>{project.id}</TableCell>
+									<TableCell>
+										<Link to={`/project/${project.id}`}>{project.id}</Link>
+									</TableCell>
 									<TableCell>{project.status}</TableCell>
 									<TableCell>{project.address}</TableCell>
 									<TableCell>
