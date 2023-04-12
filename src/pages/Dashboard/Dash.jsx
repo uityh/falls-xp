@@ -1,16 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
 	Box,
+	Divider,
 	Table,
 	TableBody,
 	TableCell,
 	TableHead,
 	TableRow,
 	Typography,
+	Button,
 } from '@mui/material';
 import { getAllProjects } from 'utils/data/projects';
 
-export default function OnsiteDash(user) {
+export default function AdminDash({ user, header }) {
 	const [projects, setProjects] = useState([]);
 	const getUsers = useCallback(async () => {
 		const allProjects = await getAllProjects();
@@ -31,13 +34,11 @@ export default function OnsiteDash(user) {
 	];
 	return (
 		<Box>
-			<Typography>Dashboard | Operations Team</Typography>
-			<Typography>
-				Current User: {user?.firstName ?? 'Not Logged in'}
+			<Typography variant="h4" component="h1">
+				{header}
 			</Typography>
-			<Typography> Role: {user?.role}</Typography>
-
-			<Table sx={{ p: 2 }}>
+			<Divider sx={{ mb: 5, mt: 1 }} />
+			<Table>
 				<TableHead>
 					<TableRow>
 						{headers.map((headCell) => (
@@ -45,6 +46,7 @@ export default function OnsiteDash(user) {
 								{headCell}
 							</TableCell>
 						))}
+						<TableCell>View Project</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -55,13 +57,17 @@ export default function OnsiteDash(user) {
 							<TableCell>{object.address}</TableCell>
 							<TableCell>Dev: Date not working</TableCell>
 							{/* Date below isn't working */}
-							{/* <TableCell>{object.startDate}</TableCell> */}
+							{/* <TableCell>{object.startDate.toDate()}</TableCell> */}
 							<TableCell>{object.customerNotes}</TableCell>
-							<TableCell>{object.tasks.join(', ')}</TableCell>
-							{/* To Do: Highlight this if logged in user is present in assigned workers list */}
-							<TableCell>{object.assignedWorkers.join(', ')}</TableCell>{' '}
+							<TableCell>{object.tasks?.join(', ')}</TableCell>
+							<TableCell>{object.assignedWorkers?.join(', ')}</TableCell>
 							<TableCell>
-								{object.assignedWorkers.includes(user?.id) ? 'Yes' : 'No'}
+								{object.assignedWorkers?.includes(user?.id) ? 'Yes' : 'No'}
+							</TableCell>
+							<TableCell>
+								<Link to={`/project/${object.id}`}>
+									<Button variant="contained">View Project</Button>
+								</Link>
 							</TableCell>
 						</TableRow>
 					))}

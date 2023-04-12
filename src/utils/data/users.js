@@ -116,12 +116,73 @@ export const authenticateUser = async (email, password) => {
 };
 
 export const createUser = async (user) => {
+	let authKey;
+	let authValue;
+	try {
+		const request = window.indexedDB.open('firebaseLocalStorageDb');
+		request.onsuccess = () => {
+			const indexedDB = request.result;
+			const transaction = indexedDB.transaction(
+				'firebaseLocalStorage',
+				'readwrite'
+			);
+			const store = transaction.objectStore('firebaseLocalStorage');
+			const keys = store.getAllKeys();
+			keys.onsuccess = () => {
+				authKey = keys.result.find((key) =>
+					key.startsWith('firebase:authUser')
+				);
+				const authValueObj = store.get(authKey);
+				authValueObj.onsuccess = () => {
+					authValue = authValueObj.result.value;
+				};
+			};
+		};
+	} catch (e) {
+		console.error(e);
+	}
 	if (await checkEmailExists(user.email))
 		throw new Error('An account with this email already exists');
 	const userDoc = await addDoc(collection(db, 'users'), user);
 	await createUserWithEmailAndPassword(auth, user.email, userDoc.id);
 	await sendPasswordResetEmail(auth, user.email);
+	try {
+		const request = window.indexedDB.open('firebaseLocalStorageDb');
+		request.onsuccess = async () => {
+			const indexedDB = request.result;
+			const transaction = indexedDB.transaction(
+				'firebaseLocalStorage',
+				'readwrite'
+			);
+			const store = transaction.objectStore('firebaseLocalStorage');
+			const clearRes = store.clear();
+			clearRes.onsuccess = () => {
+				store.put({
+					fbase_key: authKey,
+					value: authValue,
+				});
+			};
+		};
+	} catch (e) {
+		console.error(e);
+	}
 	return getUserById(userDoc.id);
+};
+
+export const getUsersByRole = async (role) => {
+	const usersDoc = await getDocs(
+		query(collection(db, 'users'), where('role', '==', role))
+	);
+	const result = [];
+	usersDoc.forEach((userDoc) => {
+		result.push({
+			id: userDoc.id,
+			...userDoc.data(),
+		});
+	});
+	if (result.length === 0)
+		throw new Error('No users with the provided role found');
+	return result;
 };
 
 // export const createUserPassword = async (user) => {

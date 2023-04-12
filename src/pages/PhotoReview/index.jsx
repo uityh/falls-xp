@@ -10,7 +10,7 @@ import {
 	Button,
 	IconButton,
 	FormControl,
-	TextField
+	TextField,
 } from '@mui/material';
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
@@ -34,7 +34,7 @@ function PhotoReview() {
 
 	useEffect(() => {
 		const fetchProject = async () => {
-			const project = await getProjectByProjectId('F9ieqoKKXEmLOik946Nb');
+			const project = await getProjectByProjectId(projectid);
 			setProjectData(project);
 			setPhotoPages(Math.ceil(project.imageUrls.length / MAX_PHOTOS));
 		};
@@ -96,18 +96,22 @@ function PhotoReview() {
 					.map((url, idx) => {
 						return (
 							<Card
-								data-testid={`photo-review-thumbnail-${(photoPage - 1) * MAX_PHOTOS + idx}`}
+								data-testid={`photo-review-thumbnail-${
+									(photoPage - 1) * MAX_PHOTOS + idx
+								}`}
 								key={idx}
 								sx={{
 									m: 2,
 									display: 'flex',
 									flexDirection: 'column',
-									border: 'grey 1px solid'
+									border: 'grey 1px solid',
 								}}
 							>
 								<img className="review-photo-thumbnail" src={url}></img>
 								<Button
-									data-testid={`photo-review-view-button-${(photoPage - 1) * MAX_PHOTOS + idx}`}
+									data-testid={`photo-review-view-button-${
+										(photoPage - 1) * MAX_PHOTOS + idx
+									}`}
 									onClick={(event) => handleViewPhotoButton(event, idx)}
 									variant="contained"
 									sx={{ maxWidth: '50%', margin: 'auto' }}
@@ -132,7 +136,9 @@ function PhotoReview() {
 			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
 				<FormControl>
 					<TextField
-						onChange={(e) => { setCostInput(e.target.value) }}
+						onChange={(e) => {
+							setCostInput(e.target.value);
+						}}
 						label="Estimated Cost"
 						type="number"
 						InputProps={{ inputProps: { min: 1 } }}
@@ -140,7 +146,9 @@ function PhotoReview() {
 						required
 					></TextField>
 					<TextField
-						onChange={(e) => { setDateInput(e.target.value) }}
+						onChange={(e) => {
+							setDateInput(e.target.value);
+						}}
 						label="Estimated Completion Date"
 						variant="filled"
 						type="date"
