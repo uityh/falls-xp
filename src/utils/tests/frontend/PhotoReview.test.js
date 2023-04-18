@@ -1,6 +1,12 @@
 import renderer from 'react-test-renderer';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, cleanup } from '@testing-library/react';
+import {
+	render,
+	screen,
+	cleanup,
+	fireEvent,
+	within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 
@@ -49,7 +55,7 @@ const mockProjectNoImg = {
 	customerNotes: 'testing for images',
 	tasks: 'initial inspection',
 	imageUrls: [],
-}
+};
 
 jest.mock('utils/data/projects');
 
@@ -57,7 +63,7 @@ jest.mock('react-router-dom', () => ({
 	...jest.requireActual('react-router-dom'),
 	useParams: () => ({
 		projectid: mockProject.id,
-	})
+	}),
 }));
 
 describe('PhotoReview', () => {
@@ -70,15 +76,21 @@ describe('PhotoReview', () => {
 	});
 
 	it('Renders the correct project data', async () => {
-		const { container } = render(<PhotoReview/>);
+		const { container } = render(<PhotoReview />);
 		await act(async () => {
 			expect(getProjectByProjectId).toHaveBeenCalledTimes(1);
 		});
 		expect(screen.getByTestId('photo-review-box')).toBeInTheDocument();
-		expect(screen.getByText("Inspection Photo Review")).toBeInTheDocument();
-		expect(screen.getByText(`Project ID: ${mockProject.id}`)).toBeInTheDocument();
-		expect(screen.getByText(`Address: ${mockProject.address}`)).toBeInTheDocument();
-		expect(screen.getByText(`Photo 1 of ${mockProject.imageUrls.length}`)).toBeInTheDocument();
+		expect(screen.getByText('Inspection Photo Review')).toBeInTheDocument();
+		expect(
+			screen.getByText(`Project ID: ${mockProject.id}`)
+		).toBeInTheDocument();
+		expect(
+			screen.getByText(`Address: ${mockProject.address}`)
+		).toBeInTheDocument();
+		expect(
+			screen.getByText(`Photo 1 of ${mockProject.imageUrls.length}`)
+		).toBeInTheDocument();
 		expect(screen.getByTestId('photo-review-thumbnail-0')).toBeInTheDocument();
 		expect(screen.getByTestId('photo-review-thumbnail-1')).toBeInTheDocument();
 		expect(screen.getByTestId('photo-review-thumbnail-2')).toBeInTheDocument();
@@ -113,10 +125,32 @@ describe('PhotoReview', () => {
 		});
 
 		await act(async () => {
-			userEvent.click(screen.getByTestId(`photo-review-view-button-${testIdx}`));
+			userEvent.click(
+				screen.getByTestId(`photo-review-view-button-${testIdx}`)
+			);
 		});
-		expect(screen.getByTestId('photo-review-large')).toHaveAttribute('src', mockProject.imageUrls[testIdx]);
+		expect(screen.getByTestId('photo-review-large')).toHaveAttribute(
+			'src',
+			mockProject.imageUrls[testIdx]
+		);
+	});
 
+	it('Renders the date input/rejection input when approve/reject is selected', async () => {
+		const { container } = render(<PhotoReview />);
+		await act(async () => {
+			expect(getProjectByProjectId).toHaveBeenCalledTimes(1);
+		});
+
+		const select = screen.getByDisplayValue('approve');
+
+		fireEvent.change(select, { target: { value: 'approve' } });
+		expect(screen.getByTestId('date-input')).toBeInTheDocument();
+		expect(screen.queryByTestId('reject-reason-input')).toBeFalsy();
+
+		fireEvent.change(select, { target: { value: 'reject' } });
+		expect(screen.getByTestId('reject-reason-input')).toBeInTheDocument();
+		expect(screen.queryByTestId('date-input')).toBeFalsy();
+		
 	});
 });
 
@@ -130,11 +164,12 @@ describe('PhotoReview', () => {
 	});
 
 	it('Renders a "no photos" div', async () => {
-		const { container } = render(<PhotoReview/>);
+		const { container } = render(<PhotoReview />);
 		await act(async () => {
 			expect(getProjectByProjectId).toHaveBeenCalledTimes(1);
 		});
-		expect(screen.getByText("No photos found for this project")).toBeInTheDocument();
+		expect(
+			screen.getByText('No photos found for this project')
+		).toBeInTheDocument();
 	});
 });
-	

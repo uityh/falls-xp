@@ -121,11 +121,12 @@ export const addImageUrl = async (projectId, imageUrl) => {
 	return getImageUrls(projectId);
 };
 
-export const markTaskAsComplete = async (projectId, taskName) => {
+export const markTaskAsComplete = async (projectId, taskName, taskNotes) => {
 	const foundProject = await getProjectByProjectId(projectId);
 	const idx = foundProject.tasks.findIndex((task) => task.name === taskName);
 	foundProject.tasks[idx].status = 'complete';
 	foundProject.tasks[idx].endDate = today;
+	foundProject.tasks[idx].taskNotes = taskNotes;
 
 	await updateDoc(doc(db, 'projects', projectId), {
 		tasks: foundProject.tasks,
@@ -137,25 +138,31 @@ export const markTaskAsComplete = async (projectId, taskName) => {
 export const addTaskToProject = async (
 	projectId,
 	taskName,
-	completePreviousTask = false
+	taskNotes = '',
+	completePreviousTask = false,
 ) => {
 	const taskTeamRelations = {
 		'initial inspection': 'onsite',
-		'pending review': 'operations',
+		'site review': 'operations',
 		'customer confirmation': 'sales',
-		installation: 'onsite',
+		'installation': 'onsite',
 	};
+	taskName = checkString(taskName);
+	if(!Object.keys(taskTeamRelations).includes(taskName)) throw new Error('Invalid task name');
+	if(taskNotes !== '') taskNotes = checkString(taskNotes);
+	if(typeof completePreviousTask !== 'boolean') throw new Error('Invalid completePreviousTask value (must be boolean)')
 
 	const foundProject = await getProjectByProjectId(projectId);
+	if(!foundProject) throw new Error('No project found for the given id');
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 	const task = {
 		name: taskName,
 		status: 'in progress',
 		startDate: today,
-		endDate: null,
+		endDate: endDate,
 		team: taskTeamRelations[taskName],
-		employeeId: null,
+		taskNotes: taskNotes,
 	};
 	foundProject.tasks.push(task);
 
@@ -315,6 +322,7 @@ export const createServiceRequest = async (
 		startDate,
 		status: 'in progress',
 		team: 'onsite',
+		taskNotes: ''
 	};
 
 	await updateDoc(doc(db, 'projects', projectId), {
