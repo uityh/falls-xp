@@ -14,6 +14,7 @@ import { TextInput } from 'components/FormikMuiFields';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { authenticateUser } from 'utils/data/users';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from 'contexts/Auth';
 
 const schema = Yup.object().shape({
 	email: Yup.string()
@@ -25,11 +26,12 @@ const schema = Yup.object().shape({
 		),
 	password: Yup.string()
 		.required('Password is required')
-		.min(8, 'Password must be at least 8 characters'),
+		.min(6, 'Password must be at least 6 characters'),
 });
 
 export default function SignIn() {
 	const [showPassword, setShowPassword] = useState(false);
+	const { refreshAuthState } = useAuthContext();
 	const navigate = useNavigate();
 
 	const handleClickShowPassword = () => {
@@ -55,7 +57,8 @@ export default function SignIn() {
 					try {
 						setSubmitting(true);
 						await authenticateUser(email, password);
-						navigate('/');
+						await refreshAuthState();
+						navigate('/dashboard');
 					} catch (e) {
 						// eslint-disable-next-line
 						console.log(e);

@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import {
 	Box,
 	Button,
@@ -67,7 +68,11 @@ function Users() {
 						<TableRow
 							key={user.id}
 							onClick={() => {
-								navigate(`/users/${user.id}`);
+								if (user.role === 'customer') {
+									navigate(`/users/${user.id}`);
+								} else {
+									alert('not a customer');
+								}
 							}}
 							sx={{ cursor: 'pointer' }}
 						>
