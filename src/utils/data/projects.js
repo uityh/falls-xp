@@ -50,14 +50,8 @@ export const getProjectByProjectId = async (id) => {
 export const checkProjectInvolvement = async (projectId, userId) => {
 	const projectData = await getProjectByProjectId(projectId);
 	const thisUser = await getUserById(userId);
-	if (thisUser.role === 'admin') {
+	if (thisUser.role === 'admin' || thisUser.role === 'sales') {
 		return true;
-	}
-	if (thisUser.role === 'sales') {
-		if (projectData.salesRepId === userId) {
-			return true;
-		}
-		return false;
 	}
 	if (thisUser.role === 'customer') {
 		if (projectData.customerId === userId) {
@@ -139,21 +133,23 @@ export const addTaskToProject = async (
 	projectId,
 	taskName,
 	taskNotes = '',
-	completePreviousTask = false,
+	completePreviousTask = false
 ) => {
 	const taskTeamRelations = {
 		'initial inspection': 'onsite',
 		'site review': 'operations',
 		'customer confirmation': 'sales',
-		'installation': 'onsite',
+		installation: 'onsite',
 	};
 	taskName = checkString(taskName);
-	if(!Object.keys(taskTeamRelations).includes(taskName)) throw new Error('Invalid task name');
-	if(taskNotes !== '') taskNotes = checkString(taskNotes);
-	if(typeof completePreviousTask !== 'boolean') throw new Error('Invalid completePreviousTask value (must be boolean)')
+	if (!Object.keys(taskTeamRelations).includes(taskName))
+		throw new Error('Invalid task name');
+	if (taskNotes !== '') taskNotes = checkString(taskNotes);
+	if (typeof completePreviousTask !== 'boolean')
+		throw new Error('Invalid completePreviousTask value (must be boolean)');
 
 	const foundProject = await getProjectByProjectId(projectId);
-	if(!foundProject) throw new Error('No project found for the given id');
+	if (!foundProject) throw new Error('No project found for the given id');
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 	const task = {
@@ -322,7 +318,7 @@ export const createServiceRequest = async (
 		startDate,
 		status: 'in progress',
 		team: 'onsite',
-		taskNotes: ''
+		taskNotes: '',
 	};
 
 	await updateDoc(doc(db, 'projects', projectId), {
