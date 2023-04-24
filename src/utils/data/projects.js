@@ -115,6 +115,8 @@ export const addImageUrl = async (projectId, imageUrl) => {
 };
 
 export const markTaskAsComplete = async (projectId, taskName, taskNotes) => {
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
 	const foundProject = await getProjectByProjectId(projectId);
 	const idx = foundProject.tasks.findIndex((task) => task.name === taskName);
 	foundProject.tasks[idx].status = 'complete';
@@ -157,7 +159,7 @@ export const addTaskToProject = async (
 		name: taskName,
 		status: 'in progress',
 		startDate: today,
-		endDate: '',
+		endDate: null,
 		team: taskTeamRelations[taskName],
 		taskNotes,
 	};

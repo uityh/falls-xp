@@ -173,7 +173,8 @@ function PhotoReview() {
 					<br />
 					{statusInput === 'reject' ? (
 						<TextField
-							data-testid="reject-reason-input"
+							data-testid='reject-reason-input'
+							onChange={(e) => {setNotesInput(e.target.value);}}
 							label="Reason for Rejection"
 							multiline
 							variant="filled"
