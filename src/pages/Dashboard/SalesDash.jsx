@@ -71,7 +71,8 @@ function SalesDashboard({ user }) {
 										<Button
 											variant="outlined"
 											onClick={() => {
-												navigate(`/review/${project.id}`);
+												// navigate(`/review/${project.id}`);
+												navigate(`/project/${project.id}`);
 											}}
 											endIcon={<Launch />}
 										>
