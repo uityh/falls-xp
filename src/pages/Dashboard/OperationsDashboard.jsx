@@ -63,7 +63,7 @@ function OperationsDashboard({ user }) {
 										<Button
 											variant="outlined"
 											onClick={() => {
-												navigate(`/review/${project.id}`);
+												navigate(`/photo-review/${project.id}`);
 											}}
 											endIcon={<Launch />}
 										>

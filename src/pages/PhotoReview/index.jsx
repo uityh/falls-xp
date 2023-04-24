@@ -13,13 +13,17 @@ import {
 	TextField,
 	Select,
 	MenuItem,
-	InputLabel
+	InputLabel,
 } from '@mui/material';
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 
-import { getProjectByProjectId, addTaskToProject, markTaskAsComplete } from '../../utils/data/projects';
+import {
+	getProjectByProjectId,
+	addTaskToProject,
+	markTaskAsComplete,
+} from '../../utils/data/projects';
 
 import '../../styles/photoreview.css';
 
@@ -49,20 +53,23 @@ function PhotoReview() {
 		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
 	};
 
-
 	const handleSubmitButton = async () => {
 		// Approving adds the 'customer confirmation' task to the project, and marks the 'site review' task as complete.
 		if (statusInput === 'approve') {
 			await addTaskToProject(
-				projectid, 
+				projectid,
 				'customer confirmation',
 				`Approved: Estimated completion date is ${dateInput}`,
 				true
 			);
 		}
 		// Rejecting marks the 'site review' task as completed, and notes that it was rejected.
-		if(statusInput === 'reject') {
-			await markTaskAsComplete(projectid, 'site review', `Rejected: ${notesInput}`)
+		if (statusInput === 'reject') {
+			await markTaskAsComplete(
+				projectid,
+				'site review',
+				`Rejected: ${notesInput}`
+			);
 		}
 	};
 
@@ -145,20 +152,23 @@ function PhotoReview() {
 				)}
 			</Box>
 			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
-				<InputLabel id='status-select-label'>Review Results</InputLabel>
+				<InputLabel id="status-select-label">Review Results</InputLabel>
 				<FormControl>
 					<Select
-						labelId='status-select-label'
-						data-testid='status-select'
+						labelId="status-select-label"
+						data-testid="status-select"
 						value={statusInput}
 						size="small"
 						onChange={(e) => {
 							setStatusInput(e.target.value);
 						}}
 					>
-						<MenuItem data-testid='approve-menu-item' value="approve">Approve</MenuItem>
-						<MenuItem data-testid='reject-menu-item' value="reject">Reject</MenuItem>
-
+						<MenuItem data-testid="approve-menu-item" value="approve">
+							Approve
+						</MenuItem>
+						<MenuItem data-testid="reject-menu-item" value="reject">
+							Reject
+						</MenuItem>
 					</Select>
 					<br />
 					{statusInput === 'reject' ? (
@@ -176,7 +186,7 @@ function PhotoReview() {
 					) : (
 						statusInput === 'approve' && (
 							<TextField
-								data-testid='date-input'
+								data-testid="date-input"
 								onChange={(e) => {
 									setDateInput(e.target.value);
 								}}
@@ -189,7 +199,15 @@ function PhotoReview() {
 							/>
 						)
 					)}
-					{statusInput !== '' && <Button data-testid='submit-button' onClick={handleSubmitButton} variant="contained">Submit</Button>}
+					{statusInput !== '' && (
+						<Button
+							data-testid="submit-button"
+							onClick={handleSubmitButton}
+							variant="contained"
+						>
+							Submit
+						</Button>
+					)}
 				</FormControl>
 			</Box>
 		</Box>

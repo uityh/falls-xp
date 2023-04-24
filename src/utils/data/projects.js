@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable */
 import {
 	collection,
 	getDocs,
@@ -14,6 +12,7 @@ import {
 import { db } from 'utils/firebase';
 import { getUserById } from 'utils/data/users';
 import { checkString, checkDateString } from 'utils/helpers/validation';
+import { uploadFile } from './photos';
 
 export const getAllProjects = async (testdb) => {
 	if (testdb) {
@@ -50,14 +49,8 @@ export const getProjectByProjectId = async (id) => {
 export const checkProjectInvolvement = async (projectId, userId) => {
 	const projectData = await getProjectByProjectId(projectId);
 	const thisUser = await getUserById(userId);
-	if (thisUser.role === 'admin') {
+	if (thisUser.role === 'admin' || thisUser.role === 'sales') {
 		return true;
-	}
-	if (thisUser.role === 'sales') {
-		if (projectData.salesRepId === userId) {
-			return true;
-		}
-		return false;
 	}
 	if (thisUser.role === 'customer') {
 		if (projectData.customerId === userId) {
@@ -127,7 +120,7 @@ export const markTaskAsComplete = async (projectId, taskName, taskNotes) => {
 	const foundProject = await getProjectByProjectId(projectId);
 	const idx = foundProject.tasks.findIndex((task) => task.name === taskName);
 	foundProject.tasks[idx].status = 'complete';
-	foundProject.tasks[idx].endDate = today;
+	foundProject.tasks[idx].endDate = '';
 	foundProject.tasks[idx].taskNotes = taskNotes;
 
 	await updateDoc(doc(db, 'projects', projectId), {
@@ -141,21 +134,25 @@ export const addTaskToProject = async (
 	projectId,
 	taskName,
 	taskNotes = '',
-	completePreviousTask = false,
+	completePreviousTask = false
 ) => {
 	const taskTeamRelations = {
 		'initial inspection': 'onsite',
 		'site review': 'operations',
 		'customer confirmation': 'sales',
-		'installation': 'onsite',
+		installation: 'onsite',
 	};
+	// eslint-disable-next-line no-param-reassign
 	taskName = checkString(taskName);
-	if(!Object.keys(taskTeamRelations).includes(taskName)) throw new Error('Invalid task name');
-	if(taskNotes !== '') taskNotes = checkString(taskNotes);
-	if(typeof completePreviousTask !== 'boolean') throw new Error('Invalid completePreviousTask value (must be boolean)')
+	if (!Object.keys(taskTeamRelations).includes(taskName))
+		throw new Error('Invalid task name');
+	// eslint-disable-next-line no-param-reassign
+	if (taskNotes !== '') taskNotes = checkString(taskNotes);
+	if (typeof completePreviousTask !== 'boolean')
+		throw new Error('Invalid completePreviousTask value (must be boolean)');
 
 	const foundProject = await getProjectByProjectId(projectId);
-	if(!foundProject) throw new Error('No project found for the given id');
+	if (!foundProject) throw new Error('No project found for the given id');
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 	const task = {
@@ -164,11 +161,12 @@ export const addTaskToProject = async (
 		startDate: today,
 		endDate: null,
 		team: taskTeamRelations[taskName],
-		taskNotes: taskNotes,
+		taskNotes,
 	};
 	foundProject.tasks.push(task);
 
 	if (foundProject.tasks.length > 1 && completePreviousTask) {
+		// eslint-disable-next-line no-shadow
 		const idx = foundProject.tasks.findIndex((task) => task.name === taskName);
 		foundProject.tasks[idx - 1].status = 'complete';
 		foundProject.tasks[idx - 1].endDate = today;
@@ -212,6 +210,29 @@ export const getProjectsByCustomerId = async (customerId, testdb) => {
 export const getProjectsByStatus = async (status) => {
 	const projectsDoc = await getDocs(
 		query(collection(db, 'projects'), where('status', '==', status))
+	);
+	let result = [];
+	projectsDoc.forEach((pDoc) => {
+		result.push({
+			id: pDoc.id,
+			...pDoc.data(),
+		});
+	});
+	result = await Promise.all(
+		result.map(async (p) => {
+			const customer = await getUserById(p.customerId);
+			return {
+				...p,
+				customer,
+			};
+		})
+	);
+	return result;
+};
+
+export const getProjectsForSales = async () => {
+	const projectsDoc = await getDocs(
+		query(collection(db, 'projects'), where('status', '!=', 'lead onboarded'))
 	);
 	let result = [];
 	projectsDoc.forEach((pDoc) => {
@@ -301,7 +322,7 @@ export const createServiceRequest = async (
 		startDate,
 		status: 'in progress',
 		team: 'onsite',
-		taskNotes: ''
+		taskNotes: '',
 	};
 
 	await updateDoc(doc(db, 'projects', projectId), {
@@ -313,6 +334,57 @@ export const createServiceRequest = async (
 	});
 
 	return getProjectByProjectId(projectId);
+};
+
+export const completeInitialInspection = async (
+	projectIdParam,
+	imagesArr,
+	commentParam
+) => {
+	const projectId = checkString(projectIdParam, 'projectId');
+	const project = await getProjectByProjectId(projectId);
+
+	let comment = '';
+	if (commentParam !== '') {
+		comment = checkString(commentParam, 'Comment');
+	}
+
+	const imageUrls = await Promise.all(
+		imagesArr.map(async (image, index) => {
+			const filePath = `${projectId}-${index}-${image.name}`;
+			return uploadFile(image, filePath);
+		})
+	);
+
+	let { tasks } = project;
+	tasks = tasks.map((task) => {
+		if (task.taskName === 'initial inspection') {
+			return {
+				...task,
+				status: 'complete',
+				comment,
+				endDate: new Date(),
+			};
+		}
+		return task;
+	});
+
+	const newTask = {
+		taskName: 'site review',
+		startDate: new Date(),
+		status: 'in progress',
+		team: 'operations',
+	};
+
+	tasks = [...tasks, newTask];
+
+	await updateDoc(doc(db, 'projects', projectId), {
+		status: 'site review',
+		tasks,
+		imageUrls,
+	});
+
+	return true;
 };
 
 // Create service request is the functionality to be used for creating a project

@@ -1,36 +1,43 @@
-/* eslint-disable no-alert */
-import React, { useState, useEffect, useCallback } from 'react';
-import { getProjectsByStatus } from 'utils/data/projects';
+import { Launch } from '@mui/icons-material';
 import {
 	Box,
 	Divider,
+	Typography,
 	Table,
 	TableBody,
 	TableCell,
 	TableHead,
 	TableRow,
-	Typography,
 	Button,
 	Stack,
 } from '@mui/material';
-import { Launch } from '@mui/icons-material';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getProjectsForSales } from 'utils/data/projects';
 
-function OnsiteDashboard({ user }) {
-	const [projects, setProjects] = useState([]);
+const headers = [
+	'Customer Name',
+	'Address',
+	'Contact',
+	'E-Mail',
+	'Status',
+	'Action',
+];
+
+function SalesDashboard({ user }) {
 	const navigate = useNavigate();
+	const [projects, setProjects] = useState([]);
 	const getProjects = useCallback(async () => {
-		const allProjects = await getProjectsByStatus('initial inspection');
+		const allProjects = await getProjectsForSales();
 		setProjects(allProjects);
 	}, []);
 	useEffect(() => {
 		getProjects();
 	}, [getProjects]);
-	const headers = ['Customer', 'Address', 'Contact', 'Email', 'Action'];
 	return (
 		<Box>
 			<Typography variant="h4" component="h1">
-				Onsite Team Dashboard
+				Sales Team Dashboard
 			</Typography>
 			<Divider sx={{ mb: 5, mt: 1 }} />
 			<Table>
@@ -57,17 +64,19 @@ function OnsiteDashboard({ user }) {
 							<TableCell>{project.address}</TableCell>
 							<TableCell>{project.customer?.phone || ''}</TableCell>
 							<TableCell>{project.customer?.email || ''}</TableCell>
+							<TableCell>{project.status}</TableCell>
 							<TableCell>
-								{user?.role === 'field' ? (
+								{user?.role === 'sales' ? (
 									<Stack alignItems="flex-end">
 										<Button
 											variant="outlined"
 											onClick={() => {
-												navigate(`/photo-upload/${project.id}`);
+												// navigate(`/review/${project.id}`);
+												navigate(`/project/${project.id}`);
 											}}
 											endIcon={<Launch />}
 										>
-											Inspect
+											Review
 										</Button>
 									</Stack>
 								) : (
@@ -82,4 +91,4 @@ function OnsiteDashboard({ user }) {
 	);
 }
 
-export default OnsiteDashboard;
+export default SalesDashboard;
