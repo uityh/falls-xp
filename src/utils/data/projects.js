@@ -336,6 +336,17 @@ export const createServiceRequest = async (
 	return getProjectByProjectId(projectId);
 };
 
+export const markProjectAsComplete = async (projectId) => {
+	const foundProject = await getProjectByProjectId(projectId);
+	foundProject.status = 'closed';
+
+	await updateDoc(doc(db, 'projects', projectId), {
+		status: foundProject.status,
+	});
+
+	return foundProject.status;
+};
+
 export const completeInitialInspection = async (
 	projectIdParam,
 	imagesArr,

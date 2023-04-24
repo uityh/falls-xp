@@ -13,7 +13,10 @@ import {
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getProjectsForSales } from 'utils/data/projects';
+import {
+	getProjectsForSales,
+	markProjectAsComplete,
+} from 'utils/data/projects';
 
 const headers = [
 	'Customer Name',
@@ -34,6 +37,11 @@ function SalesDashboard({ user }) {
 	useEffect(() => {
 		getProjects();
 	}, [getProjects]);
+
+	const decline = async (id) => {
+		await markProjectAsComplete(id);
+		setProjects(projects.filter((project) => project.id !== id));
+	};
 	return (
 		<Box>
 			<Typography variant="h4" component="h1">
@@ -67,17 +75,26 @@ function SalesDashboard({ user }) {
 							<TableCell>{project.status}</TableCell>
 							<TableCell>
 								{user?.role === 'sales' ? (
-									<Stack alignItems="flex-end">
+									<Stack direction="row" gap={2} justifyContent="flex-end">
 										<Button
 											variant="outlined"
 											onClick={() => {
-												// navigate(`/review/${project.id}`);
 												navigate(`/project/${project.id}`);
 											}}
 											endIcon={<Launch />}
 										>
-											Review
+											View Project Details
 										</Button>
+										{project.status !== 'closed' && (
+											<Button
+												variant="outlined"
+												onClick={() => {
+													decline(project.id);
+												}}
+											>
+												Decline
+											</Button>
+										)}
 									</Stack>
 								) : (
 									''
