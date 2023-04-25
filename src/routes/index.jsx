@@ -18,6 +18,7 @@ import ProjectDashboard from 'pages/ProjectDashboard';
 import Dashboard from 'pages/Dashboard';
 import Project from 'pages/Project';
 import { useAuthContext } from 'contexts/Auth';
+import ProjectChart from 'pages/ProjectChart';
 import PhotoUpload from 'pages/PhotoUpload';
 import CallBackRequest from 'pages/CallBackRequest';
 
@@ -54,6 +55,7 @@ function Routes() {
 			<Route path="/photo-review/:projectid" element={<PhotoReview />} />
 			<Route path="/photo-upload/:projectId" element={<PhotoUpload />} />
 			<Route path="/project/:projectid" element={<Project />} />
+			<Route path="/project-chart" element={<ProjectChart />} />
 			<Route path="/call-back-request" element={<CallBackRequest />} />
 			<Route path="*" element={<NotFound />} />
 		</RRDRoutes>
