@@ -1,6 +1,6 @@
 import { FakeFirestore } from 'firestore-jest-mock';
 import { mockCollection, mockDoc } from 'firestore-jest-mock/mocks/firestore';
-import { addImageUrl, getImageUrls } from '../data/projects';
+import { addImageUrl, getImageUrls } from '../../data/projects';
 
 describe('Queries', () => {
 	beforeEach(() => {
