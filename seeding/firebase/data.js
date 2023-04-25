@@ -1,12 +1,8 @@
-import { db } from './index.js';
+import { db } from './index';
 import { collection, addDoc } from '@firebase/firestore';
 
-export const addCustomer = async (customer) => {
-	await addDoc(collection(db, 'customers'), customer);
-};
-
-export const addSalesRep = async (salesRep) => {
-	await addDoc(collection(db, 'salesReps'), salesRep);
+export const addUser = async (user) => {
+	await addDoc(collection(db, 'users'), user);
 };
 
 export const addProject = async (project) => {
@@ -20,8 +16,4 @@ export const addProject = async (project) => {
 	} catch (e) {
 		console.error('Error adding document: ', e);
 	}
-};
-
-export const addOnsiteWorker = (onsiteWorker) => {
-	db.collection('onsiteWorkers').add(onsiteWorker);
 };
