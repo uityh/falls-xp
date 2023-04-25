@@ -61,10 +61,10 @@ export default function AdminDash({ user, header }) {
 							<TableCell>{object.customerNotes}</TableCell>
 							<TableCell>
 								{object.tasks?.map((task) => {
-									if (task.name && task.name?.length !== 0) {
+									if (task.taskName && task.taskName?.length !== 0) {
 										return (
 											<div>
-												<p>{task.name}, </p>
+												<p>{task.taskName}, </p>
 											</div>
 										);
 									}

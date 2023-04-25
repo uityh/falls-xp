@@ -118,12 +118,16 @@ export const markTaskAsComplete = async (projectId, taskName, taskNotes) => {
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 	const foundProject = await getProjectByProjectId(projectId);
-	const idx = foundProject.tasks.findIndex((task) => task.name === taskName);
-	foundProject.tasks[idx].status = 'complete';
-	foundProject.tasks[idx].endDate = '';
-	foundProject.tasks[idx].taskNotes = taskNotes;
-
+	const idx = foundProject.tasks.findIndex(
+		(task) => task.taskName === taskName
+	);
+	if (idx >= 0) {
+		foundProject.tasks[idx].status = 'complete';
+		foundProject.tasks[idx].endDate = today;
+		foundProject.tasks[idx].taskNotes = taskNotes;
+	}
 	await updateDoc(doc(db, 'projects', projectId), {
+		status: 'closed',
 		tasks: foundProject.tasks,
 	});
 
@@ -156,7 +160,7 @@ export const addTaskToProject = async (
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 	const task = {
-		name: taskName,
+		taskName,
 		status: 'in progress',
 		startDate: today,
 		endDate: null,
@@ -166,13 +170,16 @@ export const addTaskToProject = async (
 	foundProject.tasks.push(task);
 
 	if (foundProject.tasks.length > 1 && completePreviousTask) {
-		// eslint-disable-next-line no-shadow
-		const idx = foundProject.tasks.findIndex((task) => task.name === taskName);
+		const idx = foundProject.tasks.findIndex(
+			// eslint-disable-next-line no-shadow
+			(task) => task.taskName === taskName
+		);
 		foundProject.tasks[idx - 1].status = 'complete';
 		foundProject.tasks[idx - 1].endDate = today;
 	}
 
 	await updateDoc(doc(db, 'projects', projectId), {
+		status: taskName,
 		tasks: foundProject.tasks,
 	});
 

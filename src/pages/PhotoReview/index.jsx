@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
 	Box,
@@ -38,6 +38,8 @@ function PhotoReview() {
 	const [statusInput, setStatusInput] = useState('approve');
 	const [notesInput, setNotesInput] = useState('');
 
+	const navigate = useNavigate();
+
 	const MAX_PHOTOS = 4;
 
 	useEffect(() => {
@@ -63,22 +65,27 @@ function PhotoReview() {
 	};
 
 	const handleSubmitButton = async () => {
-		// Approving adds the 'customer confirmation' task to the project, and marks the 'site review' task as complete.
-		if (statusInput === 'approve') {
-			await addTaskToProject(
-				projectid,
-				'customer confirmation',
-				`Approved: Estimated completion date is ${dateInput}`,
-				true
-			);
-		}
-		// Rejecting marks the 'site review' task as completed, and notes that it was rejected.
-		if (statusInput === 'reject') {
-			await markTaskAsComplete(
-				projectid,
-				'site review',
-				`Rejected: ${notesInput}`
-			);
+		try {
+			// Approving adds the 'customer confirmation' task to the project, and marks the 'site review' task as complete.
+			if (statusInput === 'approve') {
+				await addTaskToProject(
+					projectid,
+					'customer confirmation',
+					`Approved: Estimated completion date is ${dateInput}`,
+					true
+				);
+			}
+			// Rejecting marks the 'site review' task as completed, and notes that it was rejected.
+			if (statusInput === 'reject') {
+				await markTaskAsComplete(
+					projectid,
+					'site review',
+					`Rejected: ${notesInput}`
+				);
+			}
+			navigate('/dashboard');
+		} catch (e) {
+			console.error(e);
 		}
 	};
 
