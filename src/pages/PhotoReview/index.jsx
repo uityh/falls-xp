@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
@@ -49,6 +49,15 @@ function PhotoReview() {
 		fetchProject();
 	}, [projectid]);
 
+	const comment = useMemo(() => {
+		if (!projectData) return undefined;
+		const siteReviewTask =
+			projectData?.tasks?.find(
+				(task) => task.taskName === 'initial inspection'
+			) ?? undefined;
+		return siteReviewTask?.comment;
+	}, [projectData]);
+
 	const handleViewPhotoButton = (idx) => {
 		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
 	};
@@ -87,7 +96,21 @@ function PhotoReview() {
 			<Typography variant="h1">Inspection Photo Review</Typography>
 			<Typography>Project ID: {projectid}</Typography>
 			<Typography>Address: {projectData.address}</Typography>
-			<Card sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+			{comment && (
+				<Typography>
+					<span
+						style={{
+							fontWeight: ' bold',
+						}}
+					>
+						Comment from On-Site team:
+					</span>{' '}
+					{comment}
+				</Typography>
+			)}
+			<Card
+				sx={{ display: 'flex', flexDirection: 'column', margin: 'auto', mt: 4 }}
+			>
 				<Typography>
 					Photo {photoIdx + 1} of {projectData.imageUrls.length}
 				</Typography>
@@ -173,8 +196,10 @@ function PhotoReview() {
 					<br />
 					{statusInput === 'reject' ? (
 						<TextField
-							data-testid='reject-reason-input'
-							onChange={(e) => {setNotesInput(e.target.value);}}
+							data-testid="reject-reason-input"
+							onChange={(e) => {
+								setNotesInput(e.target.value);
+							}}
 							label="Reason for Rejection"
 							multiline
 							variant="filled"
