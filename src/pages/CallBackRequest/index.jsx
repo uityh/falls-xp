@@ -9,8 +9,7 @@ function CallBackRequest() {
 	const [time, setTime] = useState('');
 	const [notes, setNotes] = useState('');
 
-
-	const handleCallBackSubmit = () => { 
+	const handleCallBackSubmit = () => {
 		// Submit call back request to backend
 	}
 
@@ -20,11 +19,13 @@ function CallBackRequest() {
 				<TextField 
 					id="phone" 
 					label="Phone Number" 
-					inputProps={{ 
-						type: "tel", 
-						pattern: "[0-9]{3}-[0-9]{2}-[0-9]{3}" }} 
 					required 
-					onChange={(e) => { setPhone(e.target.value) }}
+					onChange={(e) => { 
+  						e.currentTarget.value = e.target.value.replace(/[^0-9]/g, '')
+						if(e.currentTarget.value.length < 10) { 
+							setPhone(e.target.value)
+						}
+					}}
 				/>
 
 				<TextField
