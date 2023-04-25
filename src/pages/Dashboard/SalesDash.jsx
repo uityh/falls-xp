@@ -13,10 +13,7 @@ import {
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-	getProjectsForSales,
-	markProjectAsComplete,
-} from 'utils/data/projects';
+import { getProjectsForSales } from 'utils/data/projects';
 
 const headers = [
 	'Customer Name',
@@ -38,10 +35,6 @@ function SalesDashboard({ user }) {
 		getProjects();
 	}, [getProjects]);
 
-	const decline = async (id) => {
-		await markProjectAsComplete(id);
-		setProjects(projects.filter((project) => project.id !== id));
-	};
 	return (
 		<Box>
 			<Typography variant="h4" component="h1">
@@ -85,16 +78,6 @@ function SalesDashboard({ user }) {
 										>
 											View Project Details
 										</Button>
-										{project.status !== 'closed' && (
-											<Button
-												variant="outlined"
-												onClick={() => {
-													decline(project.id);
-												}}
-											>
-												Decline
-											</Button>
-										)}
 									</Stack>
 								) : (
 									''

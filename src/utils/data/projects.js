@@ -126,12 +126,13 @@ export const markTaskAsComplete = async (projectId, taskName, taskNotes) => {
 		foundProject.tasks[idx].endDate = today;
 		foundProject.tasks[idx].taskNotes = taskNotes;
 	}
+	foundProject.status = 'closed';
 	await updateDoc(doc(db, 'projects', projectId), {
-		status: 'closed',
+		status: foundProject.status,
 		tasks: foundProject.tasks,
 	});
 
-	return foundProject.tasks;
+	return foundProject;
 };
 
 export const addTaskToProject = async (
@@ -183,7 +184,7 @@ export const addTaskToProject = async (
 		tasks: foundProject.tasks,
 	});
 
-	return foundProject.tasks;
+	return foundProject;
 };
 
 export const getProjectsByCustomerId = async (customerId, testdb) => {

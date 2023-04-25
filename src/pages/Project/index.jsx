@@ -8,10 +8,12 @@ import {
 	CircularProgress,
 	Box,
 	Button,
+	Stack,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useParams, Link } from 'react-router-dom';
 import { useAuthContext } from 'contexts/Auth';
+import { markProjectAsComplete, markTaskAsComplete } from 'utils/data/projects';
 
 import {
 	addTaskToProject,
@@ -200,6 +202,48 @@ export default function Project() {
 				) : (
 					<ListItem />
 				)}
+				<Stack direction="row" gap={4}>
+					{user.role === 'sales' && thisProject.status !== 'closed' && (
+						<Button
+							variant="outlined"
+							onClick={async () => {
+								try {
+									const updatedProject = await markTaskAsComplete(
+										thisProject.id,
+										thisProject.tasks[thisProject.tasks?.length - 1].taskName,
+										''
+									);
+									setThisProject(updatedProject);
+								} catch (e) {
+									console.error(e);
+								}
+							}}
+						>
+							Decline
+						</Button>
+					)}
+					{user.role === 'sales' &&
+						thisProject.status === 'customer confirmation' && (
+							<Button
+								variant="outlined"
+								onClick={async () => {
+									try {
+										const updatedProject = await addTaskToProject(
+											thisProject.id,
+											'installation',
+											'',
+											true
+										);
+										setThisProject(updatedProject);
+									} catch (e) {
+										console.error(e);
+									}
+								}}
+							>
+								Approve Installation
+							</Button>
+						)}
+				</Stack>
 			</List>
 		);
 		return (
