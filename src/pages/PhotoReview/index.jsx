@@ -1,7 +1,7 @@
 /* eslint-disable */
 
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
 	Box,
@@ -38,6 +38,8 @@ function PhotoReview() {
 	const [statusInput, setStatusInput] = useState('approve');
 	const [notesInput, setNotesInput] = useState('');
 
+	const navigate = useNavigate();
+
 	const MAX_PHOTOS = 4;
 
 	useEffect(() => {
@@ -49,27 +51,41 @@ function PhotoReview() {
 		fetchProject();
 	}, [projectid]);
 
+	const comment = useMemo(() => {
+		if (!projectData) return undefined;
+		const siteReviewTask =
+			projectData?.tasks?.find(
+				(task) => task.taskName === 'initial inspection'
+			) ?? undefined;
+		return siteReviewTask?.comment;
+	}, [projectData]);
+
 	const handleViewPhotoButton = (idx) => {
 		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
 	};
 
 	const handleSubmitButton = async () => {
-		// Approving adds the 'customer confirmation' task to the project, and marks the 'site review' task as complete.
-		if (statusInput === 'approve') {
-			await addTaskToProject(
-				projectid,
-				'customer confirmation',
-				`Approved: Estimated completion date is ${dateInput}`,
-				true
-			);
-		}
-		// Rejecting marks the 'site review' task as completed, and notes that it was rejected.
-		if (statusInput === 'reject') {
-			await markTaskAsComplete(
-				projectid,
-				'site review',
-				`Rejected: ${notesInput}`
-			);
+		try {
+			// Approving adds the 'customer confirmation' task to the project, and marks the 'site review' task as complete.
+			if (statusInput === 'approve') {
+				await addTaskToProject(
+					projectid,
+					'customer confirmation',
+					`Approved: Estimated completion date is ${dateInput}`,
+					true
+				);
+			}
+			// Rejecting marks the 'site review' task as completed, and notes that it was rejected.
+			if (statusInput === 'reject') {
+				await markTaskAsComplete(
+					projectid,
+					'site review',
+					`Rejected: ${notesInput}`
+				);
+			}
+			navigate('/dashboard');
+		} catch (e) {
+			console.error(e);
 		}
 	};
 
@@ -87,7 +103,21 @@ function PhotoReview() {
 			<Typography variant="h1">Inspection Photo Review</Typography>
 			<Typography>Project ID: {projectid}</Typography>
 			<Typography>Address: {projectData.address}</Typography>
-			<Card sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+			{comment && (
+				<Typography>
+					<span
+						style={{
+							fontWeight: ' bold',
+						}}
+					>
+						Comment from On-Site team:
+					</span>{' '}
+					{comment}
+				</Typography>
+			)}
+			<Card
+				sx={{ display: 'flex', flexDirection: 'column', margin: 'auto', mt: 4 }}
+			>
 				<Typography>
 					Photo {photoIdx + 1} of {projectData.imageUrls.length}
 				</Typography>
@@ -174,6 +204,9 @@ function PhotoReview() {
 					{statusInput === 'reject' ? (
 						<TextField
 							data-testid="reject-reason-input"
+							onChange={(e) => {
+								setNotesInput(e.target.value);
+							}}
 							label="Reason for Rejection"
 							multiline
 							variant="filled"

@@ -55,11 +55,26 @@ export default function AdminDash({ user, header }) {
 							<TableCell>{object.customerId}</TableCell>
 							<TableCell>{object.status}</TableCell>
 							<TableCell>{object.address}</TableCell>
-							<TableCell>Dev: Date not working</TableCell>
-							{/* Date below isn't working */}
-							{/* <TableCell>{object.startDate.toDate()}</TableCell> */}
+							<TableCell>
+								{new Date(object.startDate.seconds * 1000).toDateString()}
+							</TableCell>
 							<TableCell>{object.customerNotes}</TableCell>
-							<TableCell>{object.tasks?.join(', ')}</TableCell>
+							<TableCell>
+								{object.tasks?.map((task) => {
+									if (task.taskName && task.taskName?.length !== 0) {
+										return (
+											<div>
+												<p>{task.taskName}, </p>
+											</div>
+										);
+									}
+									return (
+										<div>
+											<p>No Name Provided </p>
+										</div>
+									);
+								})}
+							</TableCell>
 							<TableCell>{object.assignedWorkers?.join(', ')}</TableCell>
 							<TableCell>
 								{object.assignedWorkers?.includes(user?.id) ? 'Yes' : 'No'}
