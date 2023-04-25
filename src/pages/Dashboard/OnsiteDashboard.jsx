@@ -14,10 +14,11 @@ import {
 	Stack,
 } from '@mui/material';
 import { Launch } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 function OnsiteDashboard({ user }) {
 	const [projects, setProjects] = useState([]);
-
+	const navigate = useNavigate();
 	const getProjects = useCallback(async () => {
 		const allProjects = await getProjectsByStatus('initial inspection');
 		setProjects(allProjects);
@@ -62,7 +63,7 @@ function OnsiteDashboard({ user }) {
 										<Button
 											variant="outlined"
 											onClick={() => {
-												alert('Dev: Upload Photo');
+												navigate(`/photo-upload/${project.id}`);
 											}}
 											endIcon={<Launch />}
 										>

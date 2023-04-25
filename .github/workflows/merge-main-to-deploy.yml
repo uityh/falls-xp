@@ -1,0 +1,23 @@
+name: PRs to main
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+jobs:
+  merge-main-to-deploy:
+    if: github.event.pull_request.merged == true
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
+          git config --local user.email "matthew6600@gmail.com"
+          git config --local user.name "uityh"
+      - name: Merge main to deploy
+        run: |
+          git fetch --unshallow
+          git checkout deploy
+          git pull
+          git merge --no-ff main -m "Auto-merge main to dev"
+          git push

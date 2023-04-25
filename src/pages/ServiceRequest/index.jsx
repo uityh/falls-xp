@@ -1,34 +1,17 @@
 /* eslint-disable  */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
 	TextField,
 	Button,
-	Typography,
-	Select,
-	MenuItem,
-	InputLabel,
+	Typography
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from 'contexts/Auth';
 import { createServiceRequest } from 'utils/data/ServiceRequest';
-import { getUserById, getUsersByRole } from 'utils/data/users';
+import { getUserById } from 'utils/data/users';
 
 export default function ServiceRequest() {
 	const { user } = useAuthContext();
-	const [onsiteUsers, setOnsiteUsers] = useState([]);
-	const [selectedOnsiteUser, setSelectedOnsiteUser] = useState(null);
-
-	useEffect(() => {
-		const fetchOnsiteUsers = async () => {
-			const users = await getUsersByRole('onsite');
-			setOnsiteUsers(users);
-			users.length
-				? setSelectedOnsiteUser(users[0].id)
-				: setSelectedOnsiteUser(null);
-		};
-		fetchOnsiteUsers();
-	}, []);
-
 	const submitRequest = async (e) => {
 		e.preventDefault();
 		try {
@@ -46,7 +29,6 @@ export default function ServiceRequest() {
 				e.target.elements.address.value,
 				e.target.elements.startDate.value,
 				e.target.elements.description.value,
-				selectedOnsiteUser
 			);
 			document.getElementById('service-request-form').reset();
 			document.getElementById('error-field').innerHTML = '';
@@ -118,28 +100,6 @@ export default function ServiceRequest() {
 						multiline
 						placeholder="Enter a Description"
 					/>
-					<br />
-					<InputLabel id="onsiteUserLabel">Onsite Employee</InputLabel>
-					<Select
-						id="onsiteUser"
-						labelId="onsiteUserLabel"
-						variant="filled"
-						size="small"
-						value={selectedOnsiteUser}
-						required
-						onChange={(e) => {
-							setSelectedOnsiteUser(e.target.value);
-						}}
-					>
-						{onsiteUsers.map((user) => {
-							return (
-								<MenuItem key={user.id} value={user.id}>
-									{user.firstName} {user.lastName}
-								</MenuItem>
-							);
-						})}
-					</Select>
-					<br />
 					<br />
 					<Button
 						variant="contained"

@@ -18,6 +18,7 @@ import ProjectDashboard from 'pages/ProjectDashboard';
 import Dashboard from 'pages/Dashboard';
 import Project from 'pages/Project';
 import { useAuthContext } from 'contexts/Auth';
+import PhotoUpload from 'pages/PhotoUpload';
 
 function Routes() {
 	const { pathname } = useLocation();
@@ -50,6 +51,7 @@ function Routes() {
 			<Route path="/project-dashboard" element={<ProjectDashboard />} />
 			<Route path="/dashboard" element={<Dashboard />} />
 			<Route path="/photo-review/:projectid" element={<PhotoReview />} />
+			<Route path="/photo-upload/:projectId" element={<PhotoUpload />} />
 			<Route path="/project/:projectid" element={<Project />} />
 			<Route path="*" element={<NotFound />} />
 		</RRDRoutes>
