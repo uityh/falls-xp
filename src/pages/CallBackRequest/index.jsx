@@ -1,9 +1,12 @@
 /* eslint-disable */
 import React, { useState } from 'react';
 import { Box, Button, Typography, TextField } from '@mui/material';
+import { useAuthContext } from 'contexts/Auth';
 
 function CallBackRequest() {
 
+	const { user } = useAuthContext();
+	console.log(user);
 	const [phone, setPhone] = useState('');
 	const [date, setDate] = useState('');
 	const [time, setTime] = useState('');
@@ -11,6 +14,23 @@ function CallBackRequest() {
 
 	const handleCallBackSubmit = () => {
 		// Submit call back request to backend
+	}
+
+	if(user === null) { 
+		return( 
+			<div>
+				<Typography>You are not logged in.</Typography>
+				<Link to="/sign-in">Sign In</Link>
+			</div>
+		);
+	}
+	
+	if(user.role !== 'customer' && user.role !== 'admin') { 
+		return(
+			<div>
+				<Typography>Only customers can request customer care appointments!</Typography>
+			</div>
+		);
 	}
 
 	return (
