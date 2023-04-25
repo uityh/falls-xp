@@ -53,9 +53,8 @@ function Navbar() {
 		if (user?.role === 'admin') items = Object.values(paths);
 		else if (user?.role) {
 			if (user?.role === 'sales') items.push(paths.leads);
-			items.push(paths.dashboard);
+			if (user.role !== 'customer') items.push(paths.dashboard);
 		}
-
 		return items || [];
 	}, [user?.role]);
 	return (
