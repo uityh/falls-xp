@@ -29,6 +29,10 @@ const paths = {
 		label: 'Dashboard',
 		path: '/dashboard',
 	},
+	chart: {
+		label: 'Project Chart',
+		path: '/project-chart',
+	},
 	// projectsDashboard: {
 	// 	label: 'Project Dashboard',
 	// 	path: '/project-dashboard',
@@ -52,10 +56,12 @@ function Navbar() {
 		let items = [];
 		if (user?.role === 'admin') items = Object.values(paths);
 		else if (user?.role) {
-			if (user?.role === 'sales') items.push(paths.leads);
-			items.push(paths.dashboard);
+			if (user?.role === 'sales') {
+				items.push(paths.leads);
+				items.push(paths.chart);
+			}
+			if (user.role !== 'customer') items.push(paths.dashboard);
 		}
-
 		return items || [];
 	}, [user?.role]);
 	return (
