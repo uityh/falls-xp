@@ -34,6 +34,7 @@ function SalesDashboard({ user }) {
 	useEffect(() => {
 		getProjects();
 	}, [getProjects]);
+
 	return (
 		<Box>
 			<Typography variant="h4" component="h1">
@@ -67,15 +68,15 @@ function SalesDashboard({ user }) {
 							<TableCell>{project.status}</TableCell>
 							<TableCell>
 								{user?.role === 'sales' ? (
-									<Stack alignItems="flex-end">
+									<Stack direction="row" gap={2} justifyContent="flex-end">
 										<Button
 											variant="outlined"
 											onClick={() => {
-												navigate(`/review/${project.id}`);
+												navigate(`/project/${project.id}`);
 											}}
 											endIcon={<Launch />}
 										>
-											Review
+											View Project Details
 										</Button>
 									</Stack>
 								) : (

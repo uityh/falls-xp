@@ -12,27 +12,30 @@ function Dashboard() {
 	if (user?.role === 'operations') return <OperationsDashboard user={user} />;
 	if (user?.role === 'field') return <OnsiteDashboard user={user} />;
 	if (user?.role === 'sales') return <SalesDashboard user={user} />;
+	if (user?.role === 'admin')
+		return <Dash user={user} header="Admin Dashboard" />;
+	if (user?.role === 'customer') return <Navigate to="/call-back-request" />;
 
-	if (user !== null) {
-		let header = 'Dashboard';
-		switch (user.role) {
-			case 'admin':
-				header = 'Admin Dashboard';
-				break;
-			case 'onsite':
-				header = 'On-Site Team Dashboard';
-				break;
-			case 'operations':
-				header = 'Operations Team Dashboard';
-				break;
-			case 'sales':
-				header = 'Sales Team Dashboard';
-				break;
-			default:
-				break;
-		}
-		return <Dash user={user} header={header} />;
-	}
+	// if (user !== null) {
+	// 	let header = 'Dashboard';
+	// 	switch (user.role) {
+	// 		case 'admin':
+	// 			header = 'Admin Dashboard';
+	// 			break;
+	// 		case 'onsite':
+	// 			header = 'On-Site Team Dashboard';
+	// 			break;
+	// 		case 'operations':
+	// 			header = 'Operations Team Dashboard';
+	// 			break;
+	// 		case 'sales':
+	// 			header = 'Sales Team Dashboard';
+	// 			break;
+	// 		default:
+	// 			break;
+	// 	}
+	// 	return <Dash user={user} header={header} />;
+	// }
 	return <Navigate to="/sign-in" />;
 }
 
