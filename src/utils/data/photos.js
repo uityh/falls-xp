@@ -6,16 +6,15 @@ import {
 } from 'firebase/storage';
 import { storage } from 'utils/firebase';
 
-export const uploadFile = (file, filePath) => {
+export const uploadFile = async (file, filePath) => {
 	const storageRef = ref(storage, filePath);
-	uploadBytes(storageRef, file)
-		.then((snapshot) => {
-			console.log('Uploaded a blob or file!');
-			return getDownloadURL(snapshot.ref);
-		})
-		.catch((error) => {
-			console.log(error);
-		});
+	try {
+		const snapshot = await uploadBytes(storageRef, file);
+		return getDownloadURL(snapshot.ref);
+	} catch (e) {
+		console.error(e);
+	}
+	return undefined;
 };
 
 export const deleteFile = (filePath) => {

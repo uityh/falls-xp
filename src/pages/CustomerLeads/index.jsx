@@ -11,7 +11,7 @@ import {
 	TableRow,
 	// Typography,
 } from '@mui/material';
-import { getProjectLeads } from 'utils/data/projects';
+import { getProjectLeads, markProjectAsComplete } from 'utils/data/projects';
 import { useAuthContext } from 'contexts/Auth';
 import Modal from 'components/Modal';
 import InitialInspection from 'components/Forms/InitialInspection';
@@ -29,6 +29,12 @@ function CustomerLeads() {
 	useEffect(() => {
 		getLeads();
 	}, [getLeads]);
+
+	const decline = async (id) => {
+		await markProjectAsComplete(id);
+		setLeads(leads.filter((lead) => lead.id !== id));
+	};
+
 	const [inspectionModal, setInspectionModal] = useState(false);
 	return (
 		<Box>
@@ -75,8 +81,14 @@ function CustomerLeads() {
 							<TableCell>
 								{user?.role === 'sales' ? (
 									<Stack direction="row" gap={2} justifyContent="flex-end">
-										<Button variant="outlined" color="error">
-											Declined
+										<Button
+											variant="outlined"
+											color="error"
+											onClick={() => {
+												decline(lead.id);
+											}}
+										>
+											Decline
 										</Button>
 										<Button
 											variant="contained"

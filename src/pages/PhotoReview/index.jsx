@@ -1,7 +1,7 @@
 /* eslint-disable */
 
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
 	Box,
@@ -11,12 +11,19 @@ import {
 	IconButton,
 	FormControl,
 	TextField,
+	Select,
+	MenuItem,
+	InputLabel,
 } from '@mui/material';
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 
-import { getProjectByProjectId } from '../../utils/data/projects';
+import {
+	getProjectByProjectId,
+	addTaskToProject,
+	markTaskAsComplete,
+} from '../../utils/data/projects';
 
 import '../../styles/photoreview.css';
 
@@ -27,8 +34,11 @@ function PhotoReview() {
 	const [photoPage, setPhotoPage] = useState(1);
 	const [photoPages, setPhotoPages] = useState(1);
 
-	const [costInput, setCostInput] = useState(1);
 	const [dateInput, setDateInput] = useState(new Date());
+	const [statusInput, setStatusInput] = useState('approve');
+	const [notesInput, setNotesInput] = useState('');
+
+	const navigate = useNavigate();
 
 	const MAX_PHOTOS = 4;
 
@@ -41,18 +51,42 @@ function PhotoReview() {
 		fetchProject();
 	}, [projectid]);
 
-	const handleViewPhotoButton = (event, idx) => {
+	const comment = useMemo(() => {
+		if (!projectData) return undefined;
+		const siteReviewTask =
+			projectData?.tasks?.find(
+				(task) => task.taskName === 'initial inspection'
+			) ?? undefined;
+		return siteReviewTask?.comment;
+	}, [projectData]);
+
+	const handleViewPhotoButton = (idx) => {
 		setPhotoIdx((photoPage - 1) * MAX_PHOTOS + idx);
 	};
 
-	const handleApproveButton = () => {
-		console.log('Approve');
-		// Call data function to approve project
-	};
-
-	const handleRejectButton = () => {
-		console.log('Reject');
-		// Call data function to reject project
+	const handleSubmitButton = async () => {
+		try {
+			// Approving adds the 'customer confirmation' task to the project, and marks the 'site review' task as complete.
+			if (statusInput === 'approve') {
+				await addTaskToProject(
+					projectid,
+					'customer confirmation',
+					`Approved: Estimated completion date is ${dateInput}`,
+					true
+				);
+			}
+			// Rejecting marks the 'site review' task as completed, and notes that it was rejected.
+			if (statusInput === 'reject') {
+				await markTaskAsComplete(
+					projectid,
+					'site review',
+					`Rejected: ${notesInput}`
+				);
+			}
+			navigate('/dashboard');
+		} catch (e) {
+			console.error(e);
+		}
 	};
 
 	if (Object.keys(projectData).length === 0) {
@@ -69,7 +103,21 @@ function PhotoReview() {
 			<Typography variant="h1">Inspection Photo Review</Typography>
 			<Typography>Project ID: {projectid}</Typography>
 			<Typography>Address: {projectData.address}</Typography>
-			<Card sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+			{comment && (
+				<Typography>
+					<span
+						style={{
+							fontWeight: ' bold',
+						}}
+					>
+						Comment from On-Site team:
+					</span>{' '}
+					{comment}
+				</Typography>
+			)}
+			<Card
+				sx={{ display: 'flex', flexDirection: 'column', margin: 'auto', mt: 4 }}
+			>
 				<Typography>
 					Photo {photoIdx + 1} of {projectData.imageUrls.length}
 				</Typography>
@@ -112,7 +160,7 @@ function PhotoReview() {
 									data-testid={`photo-review-view-button-${
 										(photoPage - 1) * MAX_PHOTOS + idx
 									}`}
-									onClick={(event) => handleViewPhotoButton(event, idx)}
+									onClick={() => handleViewPhotoButton(idx)}
 									variant="contained"
 									sx={{ maxWidth: '50%', margin: 'auto' }}
 								>
@@ -134,30 +182,64 @@ function PhotoReview() {
 				)}
 			</Box>
 			<Box sx={{ display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+				<InputLabel id="status-select-label">Review Results</InputLabel>
 				<FormControl>
-					<TextField
+					<Select
+						labelId="status-select-label"
+						data-testid="status-select"
+						value={statusInput}
+						size="small"
 						onChange={(e) => {
-							setCostInput(e.target.value);
+							setStatusInput(e.target.value);
 						}}
-						label="Estimated Cost"
-						type="number"
-						InputProps={{ inputProps: { min: 1 } }}
-						variant="filled"
-						required
-					></TextField>
-					<TextField
-						onChange={(e) => {
-							setDateInput(e.target.value);
-						}}
-						label="Estimated Completion Date"
-						variant="filled"
-						type="date"
-						margin="dense"
-						required
-						InputLabelProps={{ shrink: true }}
-					/>
-					<Button variant="contained">Approve</Button>
-					<Button variant="contained">Reject</Button>
+					>
+						<MenuItem data-testid="approve-menu-item" value="approve">
+							Approve
+						</MenuItem>
+						<MenuItem data-testid="reject-menu-item" value="reject">
+							Reject
+						</MenuItem>
+					</Select>
+					<br />
+					{statusInput === 'reject' ? (
+						<TextField
+							data-testid="reject-reason-input"
+							onChange={(e) => {
+								setNotesInput(e.target.value);
+							}}
+							label="Reason for Rejection"
+							multiline
+							variant="filled"
+							type="text"
+							margin="dense"
+							required
+							InputLabelProps={{ shrink: true }}
+						/>
+					) : (
+						statusInput === 'approve' && (
+							<TextField
+								data-testid="date-input"
+								onChange={(e) => {
+									setDateInput(e.target.value);
+								}}
+								label="Estimated Completion Date"
+								variant="filled"
+								type="date"
+								margin="dense"
+								required
+								InputLabelProps={{ shrink: true }}
+							/>
+						)
+					)}
+					{statusInput !== '' && (
+						<Button
+							data-testid="submit-button"
+							onClick={handleSubmitButton}
+							variant="contained"
+						>
+							Submit
+						</Button>
+					)}
 				</FormControl>
 			</Box>
 		</Box>
