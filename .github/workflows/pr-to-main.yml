@@ -13,7 +13,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Install and test
+    name: Install dependencies and test
     steps:
       - uses: actions/checkout@v2
         with:
